@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRYC Future You · 8th Grade</title>
+<style>
+:root {
+  --gold: #c9a800; --gold-light: #f0c917; --gold-pale: #fef9e0;
+  --black: #1a1a1a; --white: #ffffff;
+  --pink: #ed125f; --pink-dark: #d51056;
+  --gray-100: #f5f5f5; --gray-200: #e8e8e8; --gray-400: #666;
+  --gray-600: #444; --gray-800: #1a1a1a;
+  --radius: 12px; --shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: ProximaNova, sans-serif; background: #f7f7f5; color: var(--black); min-height: 100vh; }
+#app { min-height: 100vh; }
+.screen { display: none; }
+.screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* LANDING */
+.landing-header { background: #fff; padding: 32px 24px 0; text-align: center; }
+.bryc-wordmark { font-weight: 900; font-size: 12px; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+.landing-title { font-weight: 900; font-size: clamp(28px,6vw,48px); color: var(--black); line-height: 1.05; margin-bottom: 6px; }
+.landing-title span { color: var(--gold); }
+.landing-sub { font-size: 14px; color: var(--gray-400); margin-bottom: 32px; }
+
+
+
+.divider-row { display: flex; align-items: center; gap: 12px; padding: 28px 24px 0; }
+.divider-line { flex: 1; height: 1px; background: #1e1e1e; }
+.divider-text { font-size: 11px; color: var(--gray-400); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+
+.login-card { margin: 20px 24px 32px; background: #fff; border-radius: var(--radius); padding: 24px; border: 1px solid #e0e0e0; box-shadow: var(--shadow); }
+.login-card h3 { font-size: 15px; font-weight: 800; color: var(--black); margin-bottom: 14px; }
+
+.role-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.role-tab { flex: 1; padding: 8px 4px; border-radius: 6px; border: 1.5px solid #333; background: transparent; color: var(--gray-400); font-family: ProximaNova, sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: .06em; transition: all .15s; }
+.role-tab.active { border-color: var(--gold); background: rgba(240,201,23,.1); color: var(--gold); }
+
+.search-wrap { position: relative; margin-bottom: 12px; }
+.search-input { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #ddd; background: #fafafa; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 15px; outline: none; transition: border-color .15s; }
+.search-input::placeholder { color: #aaa; }
+.search-input:focus { border-color: var(--gold); }
+.fellow-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid #ddd; border-radius: 8px; max-height: 210px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+.fellow-dropdown.open { display: block; }
+.fellow-option { padding: 10px 16px; font-size: 14px; cursor: pointer; color: var(--black); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; transition: background .1s; }
+.fellow-option:last-child { border-bottom: none; }
+.fellow-option:hover { background: #fef9e0; }
+.grade-badge { font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(240,201,23,.12); padding: 2px 8px; border-radius: 20px; }
+
+.selected-fellow { background: var(--gold-pale); border: 1.5px solid var(--gold); border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; display: none; align-items: center; justify-content: space-between; }
+.selected-fellow.visible { display: flex; }
+.selected-fellow-name { font-weight: 700; font-size: 14px; color: var(--black); }
+.selected-fellow-grade { font-size: 12px; color: var(--gold); font-weight: 700; }
+.clear-btn { background: none; border: none; color: #999; cursor: pointer; font-size: 20px; line-height: 1; padding: 0 2px; }
+
+.pin-input { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #ddd; background: #fafafa; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 15px; letter-spacing: .2em; outline: none; transition: border-color .15s; margin-bottom: 12px; }
+.pin-input:focus { border-color: var(--gold); }
+.pin-input::placeholder { letter-spacing: normal; color: #aaa; }
+
+.btn-primary { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--gold); color: #000; font-family: ProximaNova, sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: background .15s; letter-spacing: .04em; }
+.btn-primary:hover { background: #e8c010; }
+.error-msg { font-size: 13px; color: var(--pink); font-weight: 700; margin-top: 10px; text-align: center; min-height: 18px; }
+
+/* ROADMAP HEADER */
+.roadmap-header { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.header-name { font-size: 16px; font-weight: 800; color: var(--black); }
+.header-meta { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: .06em; margin-top: 1px; }
+.autosave-pill { font-size: 11px; font-weight: 700; color: #aaa; min-height: 14px; margin-top: 2px; transition: color .3s; }
+.autosave-pill.saving { color: var(--gold); }
+.autosave-pill.saved { color: #22c55e; }
+.autosave-pill.err { color: var(--pink); }
+.btn-logout { background: #f5f5f5; border: 1px solid #e0e0e0; color: #666; font-family: ProximaNova, sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+.btn-logout:hover { border-color: var(--pink); color: var(--pink); }
+.card { background: #fff; border: 1px solid #e8e8e8; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.card-title { font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: .04em; margin-bottom: 14px; }
+.section-label { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #888; margin-bottom: 10px; }
+.save-row { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+.save-btn { background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 12px 24px; font-family: ProximaNova, sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background .15s; }
+.save-btn:hover { background: #e8c010; }
+.save-btn:disabled { opacity: .4; cursor: default; }
+.field-label { font-size: 10px; font-weight: 800; color: #888; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; margin-top: 14px; }
+.text-input { width: 100%; background: #fafafa; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 9px 12px; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 14px; outline: none; transition: border-color .15s; }
+.text-input:focus { border-color: var(--gold); }
+.text-input:disabled { opacity: .45; }
+.text-input::placeholder { color: #bbb; }
+.pm-topbar { background: var(--gold); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+.pm-topbar h2 { font-size: 18px; font-weight: 900; color: #000; }
+.pm-topbar button { background: rgba(0,0,0,.1); border: none; color: #000; font-family: ProximaNova, sans-serif; font-size: 12px; font-weight: 800; padding: 7px 14px; border-radius: 6px; cursor: pointer; }
+.pm-controls { padding: 14px 20px; display: flex; gap: 8px; border-bottom: 1px solid #e8e8e8; background: #fff; }
+.pm-search { flex: 1; background: #fafafa; border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px 14px; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 14px; outline: none; }
+.pm-search:focus { border-color: var(--gold); }
+.pm-search::placeholder { color: #aaa; }
+.pm-grade-sel { background: #fafafa; border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 13px; outline: none; cursor: pointer; }
+.pm-prompt-section { padding: 16px 20px 0; background: #f7f7f5; }
+.pm-prompt-card { background: #fff; border: 1px solid #e8e8e8; border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.pm-prompt-card h3 { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 10px; }
+.prompt-textarea { width: 100%; background: #fafafa; border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 12px 14px; color: var(--black); font-family: ProximaNova, sans-serif; font-size: 14px; outline: none; resize: vertical; min-height: 80px; transition: border-color .15s; margin-bottom: 10px; }
+.prompt-textarea:focus { border-color: var(--gold); }
+.fellow-list { padding: 14px 20px; flex: 1; background: #f7f7f5; }
+.fellow-item { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 13px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all .15s; box-shadow: var(--shadow); }
+.fellow-item:hover { border-color: var(--gold); background: var(--gold-pale); }
+.fellow-item-name { font-size: 15px; font-weight: 700; color: var(--black); }
+.fellow-item-meta { font-size: 12px; color: #888; margin-top: 2px; }
+.fellow-arrow { color: #ccc; font-size: 12px; }
+.pts-badge { display: inline-block; background: var(--gold-pale); color: var(--gold); border: 1px solid #e8d500; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 20px; margin-left: 6px; }
+.back-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--gold); font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; padding: 0; }
+.hidden { display: none !important; }
+.loading-screen { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+.loading-screen.hidden { display: none !important; }
+.loading-wordmark { font-size: 12px; font-weight: 900; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; }
+.loading-title { font-size: 26px; font-weight: 900; color: var(--black); }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid #f0f0f0; border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
+.loading-msg { font-size: 13px; color: #aaa; font-weight: 700; }
+.back-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--gold); font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; padding: 0; }
+
+@media (min-width: 700px) {
+  .screen { max-width: 680px; margin: 0 auto; }
+  body { background: #eeeee9; }
+  .tops-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.loading-screen { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+.loading-screen.hidden { display: none !important; }
+/* SELF TOOLKIT REFLECTION */
+.tk-intro { font-size: 13px; color: #666; line-height: 1.45; margin-bottom: 4px; }
+.tk-step { display: flex; align-items: center; gap: 8px; margin: 18px 0 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── FUTURE YOU TAB ─────────────────────────────────────────── */
+.fy-hero { background: var(--black); color: #fff; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.fy-hero::after { content: ''; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, var(--gold-light) 0%, rgba(240,201,23,0) 70%); opacity: .35; }
+.fy-hero-kicker { font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 4px; }
+.fy-hero-title { font-size: 22px; font-weight: 900; line-height: 1.15; margin-bottom: 6px; }
+.fy-hero-sub { font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.45; max-width: 520px; }
+.fy-stops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 16px; position: relative; z-index: 1; }
+.fy-stop { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 8px; padding: 8px; font-size: 11px; font-weight: 800; color: rgba(255,255,255,.75); text-align: left; cursor: pointer; font-family: ProximaNova, sans-serif; }
+.fy-stop b { display: block; font-size: 16px; margin-bottom: 2px; }
+.fy-stop.done { background: var(--gold-light); color: #000; border-color: var(--gold-light); }
+.fy-sec { scroll-margin-top: 12px; }
+.fy-sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.fy-sec-num { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #888; }
+.fy-sec-meta { font-size: 11px; font-weight: 800; color: var(--gold); }
+.fy-q { font-size: 15px; font-weight: 800; color: var(--black); margin: 18px 0 4px; line-height: 1.3; }
+.fy-q:first-child { margin-top: 0; }
+.fy-hint { font-size: 12px; color: #888; margin-bottom: 8px; line-height: 1.4; }
+.fy-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.fy-chip { padding: 8px 12px; border-radius: 999px; border: 1.5px solid #e0e0e0; background: #fafafa; font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 700; color: var(--black); cursor: pointer; transition: all .12s; }
+.fy-chip:hover:not(:disabled) { border-color: var(--gold); }
+.fy-chip.on { border-color: var(--black); background: var(--black); color: #fff; }
+.fy-chip:disabled { cursor: default; opacity: .7; }
+.fy-chip.sm { padding: 5px 10px; font-size: 12px; }
+.fy-ta { width: 100%; background: #fafafa; border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; font-family: ProximaNova, sans-serif; font-size: 14px; color: var(--black); outline: none; resize: vertical; min-height: 64px; line-height: 1.4; }
+.fy-ta:focus { border-color: var(--gold); }
+.fy-ta:disabled { opacity: .7; }
+
+/* mood meter */
+.fy-mood { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-width: 420px; }
+.fy-mq { border: 2px solid transparent; border-radius: 10px; padding: 12px; text-align: left; cursor: pointer; font-family: ProximaNova, sans-serif; color: #1a1a1a; min-height: 66px; transition: transform .1s; }
+.fy-mq:hover:not(:disabled) { transform: translateY(-1px); }
+.fy-mq b { display: block; font-size: 13px; font-weight: 900; }
+.fy-mq span { font-size: 11px; font-weight: 700; opacity: .75; }
+.fy-mq.on { border-color: var(--black); box-shadow: 0 0 0 2px #fff inset; }
+.fy-mq:disabled { cursor: default; }
+.fy-mq.red { background: #f8b4b4; } .fy-mq.yellow { background: #fbe38e; }
+.fy-mq.blue { background: #a9cdf2; } .fy-mq.green { background: #a8dfb5; }
+.fy-mood-axis { display: flex; justify-content: space-between; max-width: 420px; font-size: 10px; font-weight: 800; color: #aaa; letter-spacing: .08em; text-transform: uppercase; margin-top: 4px; }
+.fy-stamp { display: inline-flex; align-items: center; gap: 6px; background: var(--gold-pale); color: #7a6500; border: 1px dashed var(--gold); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 800; margin-top: 14px; }
+
+/* deck */
+.fy-sparks { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.fy-spark { flex-shrink: 0; max-width: 220px; text-align: left; background: var(--gold-pale); border: 1px solid #efdf86; border-radius: 10px; padding: 10px 12px; font-family: ProximaNova, sans-serif; font-size: 12px; font-weight: 700; color: #5c4c00; cursor: pointer; line-height: 1.35; }
+.fy-spark:hover { border-color: var(--gold); }
+.fy-deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 14px; }
+.fy-card { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 12px; padding: 14px; position: relative; display: flex; flex-direction: column; gap: 4px; min-height: 120px; }
+.fy-card.editing { grid-column: 1 / -1; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-pale); }
+.fy-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fy-card-type { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #888; display: flex; align-items: center; gap: 6px; }
+.fy-card-icon { font-size: 18px; }
+.fy-card-org { font-size: 16px; font-weight: 900; line-height: 1.2; }
+.fy-card-role { font-size: 12px; font-weight: 700; color: var(--gold); }
+.fy-card-flex { font-size: 13px; color: #444; line-height: 1.4; margin-top: 4px; }
+.fy-card-flex.empty { color: #bbb; font-style: italic; }
+.fy-card-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: 8px; }
+.fy-tag { font-size: 10px; font-weight: 800; background: #f3f3f3; color: #555; padding: 3px 7px; border-radius: 4px; }
+.fy-card-btn { background: none; border: none; font-family: ProximaNova, sans-serif; font-size: 12px; font-weight: 800; color: #888; cursor: pointer; padding: 2px 4px; }
+.fy-card-btn:hover { color: var(--black); }
+.fy-card-btn.danger { color: var(--pink); }
+.fy-add { border: 2px dashed #ddd; background: #fafafa; border-radius: 12px; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 800; color: #888; cursor: pointer; }
+.fy-add:hover { border-color: var(--gold); color: var(--black); }
+.fy-add b { font-size: 26px; line-height: 1; }
+.fy-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.fy-edit-grid .full { grid-column: 1 / -1; }
+.fy-range { width: 100%; accent-color: var(--black); }
+.fy-range-val { font-size: 13px; font-weight: 800; }
+.fy-done-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 8px; }
+.fy-btn { background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 10px 18px; font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 800; cursor: pointer; }
+.fy-btn:hover { background: #e8c010; }
+.fy-btn.dark { background: var(--black); color: #fff; }
+.fy-btn.ghost { background: #f1f1f1; color: #333; }
+
+/* level meter */
+.fy-level { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+.fy-lv { border: 1.5px solid #e0e0e0; background: #fafafa; border-radius: 10px; padding: 10px 8px; text-align: center; font-family: ProximaNova, sans-serif; cursor: pointer; color: var(--black); }
+.fy-lv b { display: block; font-size: 20px; font-weight: 900; }
+.fy-lv span { font-size: 11px; font-weight: 700; color: #777; }
+.fy-lv.on { border-color: var(--black); background: var(--black); color: #fff; }
+.fy-lv.on span { color: rgba(255,255,255,.7); }
+.fy-lv:disabled { cursor: default; }
+.fy-reveal { margin-top: 12px; background: #fafafa; border-radius: 10px; padding: 14px; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+.fy-reveal-num { font-size: 40px; font-weight: 900; line-height: 1; color: var(--black); }
+.fy-reveal-num small { display: block; font-size: 10px; font-weight: 800; color: #888; letter-spacing: .1em; text-transform: uppercase; }
+.fy-reveal-msg { font-size: 13px; line-height: 1.45; color: #444; }
+.fy-meters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.fy-meter { font-size: 11px; font-weight: 800; color: #666; }
+.fy-meter-bar { height: 6px; background: #ececec; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.fy-meter-bar i { display: block; height: 100%; background: var(--gold); border-radius: 3px; }
+
+/* moves */
+.fy-move { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 12px; padding: 14px; margin-top: 10px; }
+.fy-move-title { font-size: 16px; font-weight: 900; }
+.fy-pipe { display: flex; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+.fy-pipe button { flex: 1 1 0; min-width: 88px; padding: 8px 6px; border-radius: 8px; border: 1.5px solid #e0e0e0; background: #fafafa; font-family: ProximaNova, sans-serif; font-size: 11px; font-weight: 800; color: #666; cursor: pointer; }
+.fy-pipe button.on { background: var(--black); border-color: var(--black); color: #fff; }
+.fy-pipe button.on.win { background: #22a04b; border-color: #22a04b; }
+.fy-pipe button:disabled { cursor: default; }
+.fy-due { font-size: 12px; font-weight: 800; color: #888; }
+.fy-due.late { color: var(--pink); }
+
+/* sealed note */
+.fy-envelope { background: repeating-linear-gradient(135deg, #fff9dc 0 14px, #fef3b8 14px 28px); border: 1.5px solid #efdf86; border-radius: 12px; padding: 22px; text-align: center; }
+.fy-envelope b { display: block; font-size: 30px; margin-bottom: 4px; }
+.fy-envelope div { font-size: 14px; font-weight: 800; }
+.fy-envelope span { font-size: 12px; color: #7a6500; }
+
+@media (max-width: 560px) {
+  .fy-stops { grid-template-columns: repeat(2, 1fr); }
+  .fy-edit-grid { grid-template-columns: 1fr; }
+  .fy-meters { grid-template-columns: 1fr; }
+}
+
+/* ── TEAM INSIGHTS ──────────────────────────────────────────── */
+.pm-viewtabs { display: flex; gap: 6px; padding: 14px 20px 0; background: #fff; }
+.pm-viewtab { padding: 9px 16px; border-radius: 8px 8px 0 0; border: 1px solid #e8e8e8; border-bottom: none; background: #f5f5f5; font-family: ProximaNova, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #888; cursor: pointer; }
+.pm-viewtab.active { background: #f7f7f5; color: var(--black); }
+.ins-wrap { padding: 16px 20px 40px; background: #f7f7f5; flex: 1; }
+.ins-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.ins-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.ins-tile { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; }
+.ins-tile-num { font-size: 28px; font-weight: 900; line-height: 1; }
+.ins-tile-lbl { font-size: 11px; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: .06em; margin-top: 6px; }
+.ins-tile-sub { font-size: 12px; color: #999; margin-top: 2px; }
+.ins-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px; }
+.ins-card h4 { font-size: 13px; font-weight: 900; margin-bottom: 2px; }
+.ins-card p.ins-sub { font-size: 12px; color: #888; margin-bottom: 12px; }
+.ins-bar { display: grid; grid-template-columns: 130px 1fr 34px; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; font-weight: 700; color: #444; position: relative; }
+.ins-bar-track { height: 14px; background: #f1f1f1; border-radius: 0 4px 4px 0; }
+.ins-bar-fill { height: 100%; background: var(--gold); border-radius: 0 4px 4px 0; min-width: 2px; }
+.ins-bar-n { font-weight: 800; color: var(--black); text-align: right; }
+.ins-bar[data-tip]:hover::after { content: attr(data-tip); position: absolute; left: 138px; top: -26px; background: var(--black); color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 4px; white-space: nowrap; z-index: 5; pointer-events: none; }
+.ins-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.ins-quotes { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+.ins-quote { border-left: 3px solid var(--gold); padding: 6px 10px; font-size: 13px; line-height: 1.45; background: #fafafa; border-radius: 0 6px 6px 0; }
+.ins-quote cite { display: block; font-style: normal; font-size: 11px; font-weight: 800; color: #888; margin-top: 4px; }
+.ins-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ins-table th { text-align: left; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #888; padding: 6px; border-bottom: 1px solid #e8e8e8; }
+.ins-table td { padding: 7px 6px; border-bottom: 1px solid #f2f2f2; }
+.ins-table tr.click { cursor: pointer; } .ins-table tr.click:hover td { background: var(--gold-pale); }
+.ins-dl { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.ins-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.ins-head h3 { font-size: 18px; font-weight: 900; }
+.fy-badge { display: inline-block; background: #f1f1f1; color: #555; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 20px; margin-left: 6px; }
+.fy-badge.ok { background: #e3f5e8; color: #1c7a3a; }
+#screen-pm { max-width: 1100px; }
+.fy-passport { display: flex; gap: 6px; margin-top: 14px; overflow-x: auto; position: relative; z-index: 1; }
+.fy-pass { flex: 1 0 104px; border: 1.5px dashed rgba(255,255,255,.25); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 1px; }
+.fy-pass span { font-size: 18px; line-height: 1.2; color: rgba(255,255,255,.5); }
+.fy-pass b { font-size: 11px; font-weight: 800; color: #fff; }
+.fy-pass i { font-style: normal; font-size: 10px; color: rgba(255,255,255,.55); font-weight: 700; }
+.fy-pass.got { border-style: solid; border-color: var(--gold-light); background: rgba(240,201,23,.12); }
+.fy-pass.got i { color: var(--gold-light); }
+.fy-pass.open { border-style: solid; border-color: #fff; }
+.fy-pass.open span { color: var(--gold-light); }
+.fy-past { font-size: 13px; color: #444; background: #fafafa; border-radius: 8px; padding: 8px 10px; margin-top: 6px; line-height: 1.4; }
+.fy-past div { color: #666; margin-top: 2px; }
+.fy-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin: 0 4px 0 2px; vertical-align: 0; }
+.fy-dot.yellow { background: #f2c94c; } .fy-dot.red { background: #e57373; } .fy-dot.green { background: #5fbf7a; } .fy-dot.blue { background: #5b9be0; }
+.fy-then { background: var(--gold-pale); border: 1px solid #efdf86; border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.45; margin-top: 16px; }
+.fy-resume { margin-top: 12px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; overflow-x: auto; }
+.ev-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; margin-top: 8px; }
+.ev-row.on { border-color: var(--gold); background: var(--gold-pale); }
+.ev-row b { display: block; font-size: 14px; }
+.ev-row span { font-size: 12px; color: #888; }
+.pm-active { padding: 12px 20px; background: #fff; border-bottom: 1px solid #eee; font-size: 13px; color: #444; }
+@media (max-width: 560px) { .pm-controls { flex-wrap: wrap; } .pm-search { flex-basis: 100%; } .ins-bar { grid-template-columns: 110px 1fr 30px; } }
+.tk-empty { font-size: 13px; color: #aaa; font-style: italic; padding: 6px 0; }
+
+/* ── FUTURE YOU v2 ───────────────────────────────────────────── */
+.fy-ico { flex-shrink: 0; display: block; }
+.fy-hero-title { font-size: 24px; }
+.fy-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px; position: relative; z-index: 1; }
+.fy-step { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.16); border-radius: 12px; padding: 12px; }
+.fy-step-dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,.5); color: #fff; flex-shrink: 0; }
+.fy-step-txt { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; }
+.fy-step-txt span { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 2px; }
+.fy-step.done { background: rgba(240,201,23,.14); border-color: var(--gold-light); }
+.fy-step.done .fy-step-dot { background: var(--gold-light); border-color: var(--gold-light); color: #000; }
+.fy-step.done .fy-step-txt span { color: var(--gold-light); }
+.fy-progress { height: 6px; background: rgba(255,255,255,.12); border-radius: 3px; margin-top: 14px; overflow: hidden; position: relative; z-index: 1; }
+.fy-progress i { display: block; height: 100%; background: var(--gold-light); border-radius: 3px; transition: width .3s; }
+.fy-progress-lbl { font-size: 11px; font-weight: 800; color: rgba(255,255,255,.6); margin-top: 6px; letter-spacing: .06em; position: relative; z-index: 1; }
+
+.fy-sec-head { display: flex; align-items: center; gap: 12px; margin: 26px 0 12px; }
+.fy-sec-badge { width: 42px; height: 42px; border-radius: 12px; background: var(--black); color: var(--gold-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fy-sec-titles { flex: 1; }
+.fy-sec-kicker { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #888; }
+.fy-sec-title { font-size: 20px; font-weight: 900; color: var(--black); line-height: 1.15; }
+.fy-sec-meta { font-size: 12px; font-weight: 800; color: #7a6500; background: var(--gold-pale); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.fy-q { font-size: 15px; font-weight: 800; margin: 22px 0 8px; }
+.fy-q.sm { font-size: 13px; margin: 14px 0 6px; }
+.fy-pick { font-size: 11px; font-weight: 800; color: #999; letter-spacing: .04em; margin-left: 4px; }
+.fy-hint { margin-top: -4px; }
+
+/* mood meter grid with axes */
+.fy-mood-wrap { display: flex; gap: 8px; max-width: 460px; }
+.fy-mood-y { display: flex; flex-direction: column; justify-content: space-between; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 10px; font-weight: 800; color: #aaa; letter-spacing: .08em; text-transform: uppercase; padding: 6px 0 22px; }
+.fy-mood-wrap > div:last-child { flex: 1; }
+.fy-mood { max-width: none; }
+.fy-mq { min-height: 74px; }
+.fy-mq span { display: block; margin-top: 3px; font-size: 12px; opacity: .85; }
+.fy-mood-x { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #aaa; letter-spacing: .08em; text-transform: uppercase; margin-top: 5px; }
+.fy-level.five { grid-template-columns: repeat(5, 1fr); }
+
+/* sparks */
+.fy-spark { display: flex; flex-direction: column; gap: 2px; min-width: 150px; }
+.fy-spark span { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #9a8300; }
+
+/* cards */
+.fy-card-top { align-items: flex-start; }
+.fy-card-org { font-size: 17px; }
+.fy-card-type { letter-spacing: .06em; margin-top: 2px; }
+.fy-card-type .fy-card-role { color: var(--gold); text-transform: none; letter-spacing: 0; font-size: 12px; }
+.fy-card-verbs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.fy-card-verbs span { font-size: 11px; font-weight: 800; background: var(--black); color: #fff; padding: 2px 8px; border-radius: 999px; }
+.fy-ed-q { font-size: 14px; font-weight: 800; color: var(--black); margin: 18px 0 8px; }
+.fy-ed-q.first { margin-top: 4px; }
+.fy-range-row { display: flex; align-items: center; gap: 12px; max-width: 420px; }
+.fy-range-val { min-width: 56px; text-align: right; }
+
+/* rubric rating */
+.fy-rating { display: grid; grid-template-columns: 110px 1fr; gap: 16px; margin-top: 18px; background: var(--black); color: #fff; border-radius: 12px; padding: 16px; }
+.fy-rating-num { font-size: 46px; font-weight: 900; line-height: 1; color: var(--gold-light); }
+.fy-rating-num small { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 6px; }
+.fy-rating-num em { display: block; font-style: normal; font-size: 14px; color: #fff; margin-top: 4px; }
+.fy-rating-src { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.fy-rating-msg { font-size: 14px; font-weight: 700; margin-top: 6px; line-height: 1.4; }
+.fy-rating-msg span { color: rgba(255,255,255,.6); font-weight: 400; }
+.fy-rating-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.fy-rating-stats span { font-size: 12px; background: rgba(255,255,255,.1); padding: 4px 8px; border-radius: 6px; }
+.fy-rating-stats b { color: var(--gold-light); }
+.fy-rating-next { font-size: 12px; color: rgba(255,255,255,.75); margin-top: 10px; line-height: 1.4; }
+.fy-rubric { margin-top: 8px; font-size: 12px; color: #555; }
+.fy-rubric summary { cursor: pointer; font-weight: 800; color: #888; padding: 4px 0; }
+.fy-rubric div { padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
+
+/* moves */
+.fy-move-head { display: flex; gap: 10px; align-items: flex-start; }
+.fy-move-ico { width: 34px; height: 34px; border-radius: 10px; background: var(--gold-pale); color: #7a6500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fy-move-kind { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #888; }
+.fy-link { display: inline-block; margin-top: 6px; font-size: 12px; color: var(--gold); font-weight: 800; }
+.fy-kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.fy-kind { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left; padding: 14px; border: 2px dashed #ddd; background: #fafafa; border-radius: 12px; font-family: ProximaNova, sans-serif; font-size: 13px; font-weight: 800; color: var(--black); cursor: pointer; }
+.fy-kind:hover { border-color: var(--gold); border-style: solid; background: var(--gold-pale); }
+.fy-kind .fy-ico { color: var(--gold); }
+
+/* note */
+.fy-envelope { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #5c4c00; }
+.fy-envelope.open { align-items: stretch; text-align: left; }
+.fy-env-h { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.fy-env-q { font-size: 12px; font-weight: 800; color: #7a6500; margin-top: 10px; }
+.fy-env-a { font-size: 15px; color: #1a1a1a; line-height: 1.45; }
+
+/* passport (multi-event sites) */
+.fy-pass b { font-size: 12px; }
+
+@media (max-width: 560px) {
+  .fy-steps { grid-template-columns: repeat(2, 1fr); }
+  .fy-kinds { grid-template-columns: 1fr; }
+  .fy-rating { grid-template-columns: 1fr; }
+  .fy-level.five { grid-template-columns: repeat(3, 1fr); }
+}
+
+.fy-mood2 { display: grid; grid-template-columns: 52px 1fr 1fr; gap: 6px; max-width: 480px; align-items: stretch; }
+.fy-my { font-size: 10px; font-weight: 800; color: #999; letter-spacing: .06em; text-transform: uppercase; display: flex; align-items: center; line-height: 1.2; }
+.fy-mx { font-size: 10px; font-weight: 800; color: #999; letter-spacing: .06em; text-transform: uppercase; text-align: center; }
+
+/* ── v3: game feel ── */
+.fy-card { border-top-width: 5px; }
+.fy-card.t-sport { border-top-color: #f28c28; } .fy-card.t-arts { border-top-color: #ed125f; } .fy-card.t-club { border-top-color: #f0c917; }
+.fy-card.t-faith, .fy-card.t-volunteer { border-top-color: #1fa3a3; } .fy-card.t-job, .fy-card.t-family { border-top-color: #1a1a1a; }
+.fy-card.t-bryc { border-top-color: #c9a800; } .fy-card.t-program { border-top-color: #7fc8c8; } .fy-card.t-award { border-top-color: #f0c917; background: var(--gold-pale); }
+.fy-card:not(.editing) { transition: transform .15s, box-shadow .15s; }
+.fy-card:not(.editing):hover { transform: translateY(-2px) rotate(-.4deg); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+.fy-card.deal { animation: fyDeal .5s cubic-bezier(.2,.8,.3,1.25) both; }
+.fy-meter2 { margin-top: 18px; background: #fafafa; border: 1.5px solid #eee; border-radius: 12px; padding: 14px; }
+.fy-meter2-top { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #888; margin-bottom: 8px; }
+.fy-meter2-top b { color: var(--black); letter-spacing: .04em; } .fy-meter2-top b.dim { color: #bbb; }
+.fy-bar { position: relative; height: 12px; background: #e8e8e8; border-radius: 6px; margin-bottom: 20px; }
+.fy-bar i { display: block; height: 100%; background: var(--gold-light); border-radius: 6px; transition: width .6s cubic-bezier(.2,.8,.3,1.2); }
+.fy-bar .m { position: absolute; top: 15px; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: #999; }
+.fy-bar .m::before { content: ''; position: absolute; top: -17px; left: 50%; width: 2px; height: 14px; background: #ccc; }
+.fy-rating-stats.light span { background: #fff; border: 1px solid #eee; color: #444; } .fy-rating-stats.light b { color: var(--black); }
+.fy-reveal-cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; background: var(--black); color: #fff; border-radius: 12px; padding: 14px 16px; }
+.fy-reveal-cta b { display: block; font-size: 15px; } .fy-reveal-cta span { font-size: 12px; color: rgba(255,255,255,.7); }
+.fy-reveal-cta .fy-btn { background: var(--gold-light); color: #000; } .fy-reveal-cta .fy-btn:disabled { opacity: .35; cursor: default; }
+.fy-rating.flip { animation: fyFlip .7s ease both; }
+.fy-move.ticket { position: relative; background: #fff; border: 1.5px solid #e8e8e8; border-left: 2px dashed #d8d8d8; }
+.fy-move.ticket::before, .fy-move.ticket::after { content: ''; position: absolute; left: -9px; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 1.5px solid #e8e8e8; }
+.fy-move.ticket::before { top: -8px; } .fy-move.ticket::after { bottom: -8px; }
+.fy-stub { width: 54px; flex-shrink: 0; background: var(--black); color: #fff; border-radius: 10px; text-align: center; padding: 6px 4px; line-height: 1.05; }
+.fy-stub small { display: block; font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.fy-stub b { display: block; font-size: 13px; font-weight: 900; color: var(--gold-light); } .fy-stub b + b { font-size: 22px; color: #fff; }
+.fy-stub.late { background: var(--pink); } .fy-stub.late b { color: #fff; }
+.fy-envelope { position: relative; overflow: hidden; }
+.fy-seal-stamp { position: absolute; right: 14px; top: 12px; transform: rotate(12deg); border: 3px solid var(--pink); color: var(--pink); font-weight: 900; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; opacity: .85; }
+.fy-envelope.sealing { animation: fyPop .5s ease; } .fy-envelope.sealing .fy-seal-stamp { animation: fyStamp .6s .25s cubic-bezier(.2,.8,.3,1.4) both; }
+.fy-toast { position: fixed; right: 16px; z-index: 300; background: #000; color: var(--gold-light); font-weight: 900; font-size: 14px; padding: 11px 16px; border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,.25); opacity: 0; animation: fyToast 2.6s ease forwards; max-width: 300px; }
+.fy-toast.big { background: var(--gold-light); color: #000; font-size: 16px; }
+.fy-conf { position: fixed; top: -12px; height: 10px; z-index: 400; pointer-events: none; border-radius: 2px; animation: fyFall 1.8s ease-in forwards; }
+@keyframes fyDeal { from { opacity: 0; transform: translateY(-24px) rotate(-5deg) scale(.92); } to { opacity: 1; transform: none; } }
+@keyframes fyFlip { from { opacity: 0; transform: perspective(600px) rotateX(-70deg); } to { opacity: 1; transform: none; } }
+@keyframes fyPop { 50% { transform: scale(1.06); } }
+@keyframes fyStamp { from { opacity: 0; transform: rotate(12deg) scale(2.4); } to { opacity: .85; transform: rotate(12deg) scale(1); } }
+@keyframes fyToast { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes fyFall { to { transform: translate(var(--x), 105vh) rotate(var(--r)); opacity: .9; } }
+@media (prefers-reduced-motion: reduce) { .fy-card.deal, .fy-rating.flip, .fy-envelope.sealing, .fy-envelope.sealing .fy-seal-stamp, .fy-bar i { animation: none; transition: none; } }
+@media (max-width: 560px) { .fy-reveal-cta { flex-direction: column; align-items: stretch; } }
+
+/* ── v4: road map + one stop at a time ── */
+.fy-map { background: var(--black); color: #fff; border-radius: 18px; padding: 22px 22px 18px; position: relative; overflow: hidden; }
+.fy-map::before { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(240,201,23,.35), rgba(240,201,23,0) 70%); }
+.fy-map-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: relative; }
+.fy-map-title { font-size: 28px; font-weight: 900; line-height: 1.1; text-wrap: balance; }
+.fy-map-count { text-align: right; font-size: 18px; font-weight: 900; color: rgba(255,255,255,.6); line-height: 1; }
+.fy-map-count b { font-size: 40px; color: var(--gold-light); } .fy-map-count small { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; margin-top: 4px; }
+.fy-road { position: relative; height: 240px; margin: 14px 0 6px; }
+.fy-road-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.fy-road-base { fill: none; stroke: #333; stroke-width: 34; stroke-linecap: round; }
+.fy-road-line { fill: none; stroke: rgba(255,255,255,.35); stroke-width: 3; stroke-dasharray: 14 14; }
+.fy-road-done { fill: none; stroke: var(--gold-light); stroke-width: 8; stroke-linecap: round; transition: stroke-dasharray .8s ease; }
+.fy-node { position: absolute; transform: translate(-50%, -50%); background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: ProximaNova, sans-serif; color: #fff; padding: 0; }
+.fy-node-dot { width: 62px; height: 62px; border-radius: 50%; background: #1a1a1a; border: 3px solid rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; color: #fff; transition: transform .15s; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+.fy-node:hover .fy-node-dot, .fy-node:focus-visible .fy-node-dot { transform: scale(1.08); }
+.fy-node:focus-visible { outline: none; } .fy-node:focus-visible .fy-node-dot { box-shadow: 0 0 0 4px rgba(240,201,23,.5); }
+.fy-node-lbl { font-size: 13px; font-weight: 800; text-align: center; line-height: 1.15; max-width: 120px; background: rgba(0,0,0,.55); padding: 3px 8px; border-radius: 6px; }
+.fy-node-lbl small { display: block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.fy-node.done .fy-node-dot { background: var(--gold-light); border-color: var(--gold-light); color: #000; }
+.fy-node.next .fy-node-dot { border-color: #fff; background: #fff; color: #000; animation: fyRing 1.8s ease-out infinite; }
+.fy-node.stamp .fy-node-dot { animation: fyStampIn .6s cubic-bezier(.2,.8,.3,1.5); }
+.fy-go { position: relative; width: 100%; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; align-items: center; column-gap: 12px; text-align: left; background: var(--gold-light); color: #000; border: none; border-radius: 14px; padding: 14px 18px; font-family: ProximaNova, sans-serif; cursor: pointer; margin-top: 4px; }
+.fy-go span { font-size: 20px; font-weight: 900; } .fy-go small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+.fy-go em { grid-row: 2; font-style: normal; font-size: 13px; opacity: .75; } .fy-go b { grid-row: 1 / span 2; grid-column: 2; font-size: 18px; font-weight: 900; background: #000; color: var(--gold-light); padding: 10px 16px; border-radius: 10px; }
+.fy-go:hover b { transform: translateX(3px); } .fy-go.done { cursor: default; display: block; } .fy-go.done em { display: block; }
+.fy-map-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.fy-map-stats div { background: rgba(255,255,255,.07); border-radius: 10px; padding: 10px; text-align: center; }
+.fy-map-stats b { display: flex; justify-content: center; font-size: 24px; font-weight: 900; color: var(--gold-light); min-height: 28px; align-items: center; }
+.fy-map-stats span { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.fy-play { display: flex; flex-direction: column; gap: 14px; }
+.fy-play-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--black); color: #fff; border-radius: 16px; padding: 14px 16px; }
+.fy-back { background: rgba(255,255,255,.12); color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-family: ProximaNova, sans-serif; font-weight: 800; font-size: 13px; cursor: pointer; }
+.fy-back:hover { background: rgba(255,255,255,.2); }
+.fy-play-title { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.fy-play-ico { width: 40px; height: 40px; border-radius: 10px; background: var(--gold-light); color: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fy-play-title small { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); } .fy-play-title h2 { font-size: 22px; font-weight: 900; line-height: 1.1; }
+.fy-dots { display: flex; gap: 6px; } .fy-dots i { width: 26px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); } .fy-dots i.done { background: var(--gold-light); } .fy-dots i.now { background: #fff; }
+.fy-play-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 16px; padding: 24px; box-shadow: var(--shadow); animation: fySlide .35s ease both; }
+.fy-play .card { animation: fySlide .35s ease both; }
+.fy-bigq { font-size: 24px; font-weight: 900; line-height: 1.2; margin-bottom: 16px; text-wrap: balance; }
+.fy-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.fy-tile { min-height: 76px; border: 2px solid #e4e4e4; background: #fafafa; border-radius: 14px; padding: 14px; font-family: ProximaNova, sans-serif; font-size: 16px; font-weight: 800; color: var(--black); cursor: pointer; text-align: left; transition: transform .12s, border-color .12s; }
+.fy-tile:hover { border-color: var(--gold); transform: translateY(-2px); }
+.fy-tile.on { background: var(--black); border-color: var(--black); color: #fff; box-shadow: 0 0 0 3px var(--gold-light); }
+.fy-guess { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+.fy-guess-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; border: 2px solid #e4e4e4; background: #fafafa; border-radius: 14px; padding: 14px; font-family: ProximaNova, sans-serif; cursor: pointer; color: var(--black); transition: transform .12s; }
+.fy-guess-tile:hover { transform: translateY(-2px); border-color: var(--gold); }
+.fy-guess-tile b { font-size: 34px; font-weight: 900; line-height: 1; } .fy-guess-tile strong { font-size: 15px; font-weight: 900; } .fy-guess-tile span { font-size: 12px; color: #666; line-height: 1.35; }
+.fy-guess-tile.on { background: var(--black); color: #fff; border-color: var(--black); box-shadow: 0 0 0 3px var(--gold-light); } .fy-guess-tile.on b { color: var(--gold-light); } .fy-guess-tile.on span { color: rgba(255,255,255,.7); }
+.fy-play-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.fy-btn.big { font-size: 16px; padding: 14px 24px; border-radius: 12px; background: var(--black); color: var(--gold-light); }
+.fy-btn.big:hover { background: #000; } .fy-btn.big:disabled { opacity: .3; cursor: default; }
+.fy-ta.big { font-size: 17px; min-height: 120px; }
+.fy-preview { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.fy-preview div { background: var(--gold-pale); border-radius: 10px; padding: 12px; } .fy-preview small { display: block; font-size: 12px; font-weight: 800; color: #7a6500; } .fy-preview p { font-size: 15px; margin-top: 4px; } .fy-preview em { color: #aaa; }
+.fy-play .fy-mood2 { max-width: 560px; } .fy-play .fy-mq { min-height: 92px; } .fy-play .fy-mq b { font-size: 17px; }
+@keyframes fyRing { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,.55); } 100% { box-shadow: 0 0 0 18px rgba(255,255,255,0); } }
+@keyframes fyStampIn { 0% { transform: scale(1.8) rotate(-12deg); } 100% { transform: none; } }
+@keyframes fySlide { from { opacity: .4; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fy-node.next .fy-node-dot, .fy-node.stamp .fy-node-dot, .fy-play-card, .fy-play .card { animation: none; } }
+@media (max-width: 600px) {
+  .fy-road { height: 230px; } .fy-node-dot { width: 50px; height: 50px; } .fy-node-lbl { font-size: 11px; max-width: 80px; }
+  .fy-map-title { font-size: 22px; } .fy-map-stats { grid-template-columns: repeat(2, 1fr); }
+  .fy-tiles, .fy-tiles.three, .fy-guess { grid-template-columns: 1fr 1fr; } .fy-bigq { font-size: 20px; } .fy-play-card { padding: 18px; }
+}
+
+.fy-node { width: 140px; }
+.fy-node-lbl { max-width: 140px; }
+@media (max-width: 600px) {
+  .fy-road { height: auto; display: flex; flex-direction: column; gap: 12px; margin: 18px 0 14px; padding-left: 4px; }
+  .fy-road::before { content: ''; position: absolute; left: 28px; top: 20px; bottom: 20px; width: 6px; border-radius: 3px; background: repeating-linear-gradient(#444 0 10px, #333 10px 20px); }
+  .fy-road-svg { display: none; }
+  .fy-node { position: relative; left: auto !important; top: auto !important; transform: none; width: auto; flex-direction: row; gap: 12px; text-align: left; }
+  .fy-node-dot { width: 52px; height: 52px; }
+  .fy-node-lbl { background: none; padding: 0; max-width: none; text-align: left; font-size: 16px; }
+  .fy-node-lbl small { font-size: 10px; }
+}
+
+.fy-next-stop { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+.fy-next-stop small { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(240,201,23,.7); }
+
+.fy-senior { background: var(--gold-pale); border: 1.5px solid #efdf86; border-left: 5px solid var(--gold-light); border-radius: 10px; padding: 12px 14px; font-size: 14px; line-height: 1.45; color: #4a3f00; margin-bottom: 12px; }
+.fy-senior b { color: #000; }
+.fy-guess-cap { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #888; margin-top: 10px; }
+
+</style>
+</head>
+<body>
+<div id="loading-screen" class="loading-screen">
+  <div class="loading-wordmark">Baton Rouge Youth Coalition</div>
+  <div class="loading-title">Future You</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-msg">Loading&hellip;</div>
+</div>
+<div id="app">
+<div id="screen-landing" class="screen active">
+  <div class="landing-header">
+    <div class="bryc-wordmark">Baton Rouge Youth Coalition</div>
+    <h1 class="landing-title">Future <span>You</span></h1>
+    <p class="landing-sub">8th Grade &middot; PY27</p>
+  </div>
+  <div class="login-card">
+    <h3>Find your name</h3>
+    <div class="role-tabs">
+      <button class="role-tab active" data-role="fellow">Fellow</button>
+      <button class="role-tab" data-role="pm">Team</button>
+    </div>
+    <div id="fellow-login-fields">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="fellow-search" placeholder="Search your name&hellip;" autocomplete="off">
+        <div class="fellow-dropdown" id="fellow-dd"></div>
+      </div>
+      <div class="selected-fellow" id="sel-display">
+        <div><div class="selected-fellow-name" id="sel-name"></div><div class="selected-fellow-grade" id="sel-grade"></div></div>
+        <button class="clear-btn" data-action="clear-fellow">&times;</button>
+      </div>
+    </div>
+    <input type="password" class="pin-input" id="pin-input" placeholder="Password" autocomplete="off">
+    <button class="btn-primary" id="login-btn">Open Future You</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+</div>
+
+<div id="screen-fellow" class="screen">
+  <div class="roadmap-header">
+    <div><div class="header-name" id="rh-name"></div><div class="header-meta" id="rh-meta"></div><div class="autosave-pill" id="autosave-pill"></div></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="back-btn hidden" id="back-to-pm-btn" data-action="back-to-pm">&#8592; All Fellows</button>
+      <button class="btn-logout" data-action="logout">Sign Out</button>
+    </div>
+  </div>
+  <div style="padding:20px;"><div id="fy-root"></div></div>
+</div>
+
+<div id="screen-pm" class="screen">
+  <div class="pm-topbar"><h2>Future You &middot; 8th Grade</h2><button data-action="logout">Sign Out</button></div>
+  <div class="pm-active" id="pm-active-label"></div>
+  <div class="pm-controls">
+    <input type="text" class="pm-search" id="pm-search" placeholder="Search Fellows&hellip;">
+    <select class="pm-grade-sel" id="pm-grade-sel"><option value="">All Grades</option><option value="8th">8th Grade</option></select>
+    <select class="pm-grade-sel" id="pm-pm-filter"><option value="">All PMs</option></select>
+  </div>
+  <div class="pm-viewtabs" id="pm-viewtabs">
+    <button class="pm-viewtab active" data-view="list">Fellows</button>
+    <button class="pm-viewtab" data-view="insights">Insights</button>
+    <button class="pm-viewtab" data-view="events">Event Check-ins</button>
+  </div>
+  <div class="fellow-list" id="pm-fellow-list"></div>
+  <div class="ins-wrap" id="pm-insights" style="display:none"></div>
+  <div class="ins-wrap" id="pm-events" style="display:none"></div>
+</div>
+</div>
+<script>
+
+// ══ CONFIG ════════════════════════════════════════════════════════
+const CONFIG = {
+  // Paste the Web App URL from Apps Script (Deploy > New deployment) here.
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyzNDozy6u36o2yefIZLIppAMJQ0DkD3ONNasg33ClrdVADUEKL5xivMUdm7hYdHVgB/exec',
+  // Fellows use this shared password unless the Roster tab gives them a PIN.
+  PASSWORDS: { fellow: 'futureself26', pm: 'BRYCte3m!' },
+};
+
+let FELLOWS = [];
+let S = { view: 'landing', role: 'fellow', fellow: null, data: {}, config: {} };
+
+// ── STORAGE ───────────────────────────────────────────────────────
+async function apiFetch(action, payload = {}) {
+  if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.includes('PASTE_')) return localFetch(action, payload);
+  try {
+    const r = await fetch(CONFIG.APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action, ...payload }) });
+    return await r.json();
+  } catch (e) { return localFetch(action, payload); }
+}
+// Demo mode: works in the browser alone until the Apps Script URL is set.
+function localFetch(action, p) {
+  const k = id => 'fy8_' + id; const ls = (key, v) => { try { if (v === undefined) return localStorage.getItem(key); localStorage.setItem(key, v); } catch (e) { return null; } };
+  if (action === 'loadRoster') return { ok: true, fellows: [
+    { id: 'demo_8a', name: 'Demo Eighth A', grade: '8th', pm: 'Kendrick', campus: 'Downtown' },
+    { id: 'demo_8b', name: 'Demo Eighth B', grade: '8th', pm: 'Kendrick', campus: 'Airline' },
+    { id: 'demo_8c', name: 'Demo Eighth C', grade: '8th', pm: 'Kendrick', campus: 'Downtown', hasPin: true },
+  ] };
+  if (action === 'checkPin') return { ok: p.pin === '1234' };
+  if (action === 'loadFellow') { const r = ls(k(p.fellowId)); return { ok: true, data: r ? JSON.parse(r) : null }; }
+  if (action === 'saveFellow') { ls(k(p.fellowId), JSON.stringify(p.data)); return { ok: true }; }
+  if (action === 'loadAllFellows') { const out = {}; FELLOWS.forEach(f => { const r = ls(k(f.id)); if (r) out[f.id] = JSON.parse(r); }); return { ok: true, fellows: out }; }
+  if (action === 'loadConfig') { const r = ls('fy8__config'); return { ok: true, config: r ? JSON.parse(r) : {} }; }
+  if (action === 'saveConfig') { const r = ls('fy8__config'); const c = { ...(r ? JSON.parse(r) : {}), ...p.config }; ls('fy8__config', JSON.stringify(c)); return { ok: true, config: c }; }
+  return { ok: true };
+}
+
+// ══ FUTURE YOU · HOST SETTINGS (8th Grade) ═══════════════════════
+const FY_HOST = {
+  // Every event a Fellow can check in to this year. The Team opens one at a time.
+  EVENTS: [
+    { id: 'fyf_fall26',   name: 'Future You Forum', when: 'Fall 2026',   kind: 'explore',   grades: ['8th'] },
+    { id: 'fyf_spring27', name: 'Future You Fair',  when: 'Spring 2027', kind: 'forum',     grades: ['8th'] },
+    { id: 'symp_27',      name: 'Symposium',        when: 'April 2027',  kind: 'symposium', grades: ['8th'] },
+  ],
+  CSV_PREFIX: 'future-you-8th',
+  GRADE: {
+    '8th':  { deckHint: 'Middle school counts. So do jobs, family responsibilities, church, and BRYC.', gradeChips: [6, 7, 8], defaultGrade: 8,
+              stealQ: "What's one thing an alum did that you could start doing in high school?", resume: false, plan9: true },
+  },
+};
+function fyRO() { return S.role === 'pm'; }
+function fyActiveEvent() { const id = S.config.activeEvent; if (id === 'none') return null; return FY_HOST.EVENTS.find(e => e.id === id) || FY_HOST.EVENTS[0]; }
+
+
+let _saveTimer = null;
+function scheduleAutoSave() {
+  if (!S.fellow || fyRO()) return;
+  const pill = document.getElementById('autosave-pill');
+  if (pill) { pill.textContent = 'Saving…'; pill.className = 'autosave-pill saving'; }
+  clearTimeout(_saveTimer); _saveTimer = setTimeout(autoSave, 1000);
+}
+async function autoSave() {
+  if (!S.fellow) return;
+  const d = S.data[S.fellow.id] || {}; d.updated = new Date().toISOString();
+  const r = await apiFetch('saveFellow', { fellowId: S.fellow.id, data: d });
+  const pill = document.getElementById('autosave-pill');
+  if (pill) {
+    if (r && r.ok) { pill.textContent = 'Saved'; pill.className = 'autosave-pill saved'; setTimeout(() => { pill.textContent = ''; pill.className = 'autosave-pill'; }, 2000); }
+    else { pill.textContent = 'Save failed. Check your wifi.'; pill.className = 'autosave-pill err'; }
+  }
+}
+
+
+// ══ FUTURE YOU · SHARED CORE ══════════════════════════════════════
+// Used by the SRL Roadmap tab (9th/10th) and the standalone 8th/11th site.
+// Each host defines FY_HOST plus fyRO(), fyActiveEvent(), scheduleAutoSave() before this file.
+// All Fellow answers live in S.data[fellowId].fy.
+const FY = Object.assign({
+  NOTE_OPENS: '2027-05-01',
+  DECK_GOAL: 6,
+  CSV_PREFIX: 'future-you',
+  MOODS: {
+    red:    { label: 'Red',    desc: 'nervous · stressed · frustrated', words: ['Nervous','Stressed','Frustrated','Overwhelmed','Pressured'] },
+    yellow: { label: 'Yellow', desc: 'excited · hopeful · proud',       words: ['Excited','Hopeful','Proud','Inspired','Curious'] },
+    blue:   { label: 'Blue',   desc: 'unsure · tired · discouraged',    words: ['Unsure','Tired','Discouraged','Bored','Lost'] },
+    green:  { label: 'Green',  desc: 'calm · grateful · relieved',      words: ['Calm','Grateful','Relieved','Content','Secure'] },
+  },
+  PATHS: [
+    { id: 'four_year', label: '4-Year College' }, { id: 'two_year', label: '2-Year / Community College' },
+    { id: 'trade', label: 'Trade / Apprenticeship' }, { id: 'military', label: 'Military' },
+    { id: 'work', label: 'Straight to Work' }, { id: 'business', label: 'Starting a Business' },
+  ],
+  SHIFT: [
+    { id: 'confirmed', label: 'Confirmed my plan' }, { id: 'shifted', label: 'Shifted my plan' },
+    { id: 'new', label: 'Gave me a new idea' }, { id: 'figuring', label: "I'm still figuring it out" },
+  ],
+  PLAN: [{ id: 'know', label: 'I know what I want' }, { id: 'ideas', label: 'I have a few ideas' }, { id: 'figuring', label: "I'm still figuring it out" }],
+  FIT: [{ n: 1, label: 'Not for me' }, { n: 2, label: 'Probably not' }, { n: 3, label: 'Maybe' }, { n: 4, label: 'I could see it' }, { n: 5, label: 'I could live here' }],
+  TYPES: [
+    { id: 'sport', icon: '🏀', label: 'Sport', rt: 'Athletics' },
+    { id: 'club', icon: '🏫', label: 'School Club', rt: 'School Club / Organization' },
+    { id: 'arts', icon: '🎭', label: 'Arts / Performance', rt: 'Arts / Music / Performance' },
+    { id: 'faith', icon: '🙏', label: 'Faith / Church', rt: 'Religious / Faith-Based' },
+    { id: 'volunteer', icon: '🤝', label: 'Volunteer', rt: 'Community Service / Volunteer' },
+    { id: 'job', icon: '💼', label: 'Job / Side Hustle', rt: 'Work (Paid)' },
+    { id: 'family', icon: '🏠', label: 'Family Responsibility', rt: 'Family Responsibilities' },
+    { id: 'bryc', icon: '⭐', label: 'BRYC', rt: 'College Prep Program' },
+    { id: 'program', icon: '🏕️', label: 'Summer / Program', rt: 'Summer Program' },
+    { id: 'award', icon: '🏆', label: 'Award / Honor', rt: '' },
+  ],
+  ROLES: ['Member','Helper','Leader','Captain / Officer','Founder','Employee'],
+  LEAD_ROLES: ['Leader','Captain / Officer','Founder'],
+  VERBS: ['Led','Organized','Cared for','Built','Taught','Created','Competed','Performed','Managed','Supported','Planned','Served','Mentored','Practiced'],
+  SPARKS: [
+    { type: 'family', q: 'Watch siblings, cook, or help run the house?' },
+    { type: 'job', q: 'Make money doing hair, lawns, babysitting, or selling something?' },
+    { type: 'faith', q: 'Choir, usher board, or youth group?' },
+    { type: 'sport', q: 'On a team, even a rec league?' },
+    { type: 'bryc', q: 'BRYC counts.' },
+    { type: 'volunteer', q: 'Food drive, cleanup, or community event?' },
+    { type: 'arts', q: 'Band, dance, art, videos, or music?' },
+    { type: 'program', q: 'A camp, workshop, or summer program?' },
+    { type: 'award', q: 'Honor roll or a certificate?' },
+  ],
+  // BRYC Involvement Score Rubric
+  RUBRIC: [
+    { n: 1, label: 'Low',       need: '0–4 activities' },
+    { n: 2, label: 'Moderate',  need: '5–8 activities, with 1 deep involvement or leadership role' },
+    { n: 3, label: 'High',      need: '8–10 activities, with 2–3 you have done for more than one year' },
+    { n: 4, label: 'Extensive', need: 'Level 3, plus 5 or more awards or honors' },
+  ],
+  MOVE_KINDS: {
+    apply:  { label: 'Apply for something new', short: 'Apply', nameQ: 'What are you applying for?', nameP: 'e.g. Teen Volunteer Program at the Main Library',
+              planQ: null, statuses: [['interested','Interested'],['working','Working on it'],['submitted','Submitted'],['in',"I'm in!"],['notnow','Not this time']], closed: ['submitted','in','notnow'], win: 'in' },
+    deepen: { label: 'Go deeper in something I already do', short: 'Go deeper', nameQ: 'Which activity?', nameP: 'e.g. Band',
+              planQ: 'How will you go deeper?', planP: 'e.g. Run for section leader, add a practice day, lead a project', statuses: [['planning','Planning'],['started','Started'],['doing','Doing it'],['notnow','Not right now']], closed: ['doing','notnow'], win: 'doing' },
+    start:  { label: 'Start something on my own', short: 'Start', nameQ: 'What do you want to start?', nameP: 'e.g. A tutoring group, a small business, a YouTube channel',
+              planQ: 'What will it look like?', planP: 'Who is it for? How often?', statuses: [['idea','Idea'],['planning','Planning'],['launched','Launched'],['notnow','Not right now']], closed: ['launched','notnow'], win: 'launched' },
+  },
+  ICONS: {
+    checkin: '<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+    deck: '<rect x="3" y="7" width="13" height="13" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>',
+    move: '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
+    note: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    check: '<path d="m5 12 5 5 9-10"/>',
+    apply: '<path d="M4 20h16"/><path d="M12 4v11"/><path d="m7 9 5-5 5 5"/>',
+    deepen: '<path d="M12 3v14"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/>',
+    start: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+  },
+}, typeof FY_HOST !== 'undefined' ? FY_HOST : {});
+
+let FYUI = { edit: null, confirmDel: null, editMove: null, fid: null, showResume: false, anim: {}, prev: null };
+function fyIcon(k, size) { return `<svg class="fy-ico" width="${size || 22}" height="${size || 22}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${FY.ICONS[k]}</svg>`; }
+function fyEsc(v) { return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fyG(f) { const fl = f || S.fellow; return FY.GRADE[fl && fl.grade] || Object.values(FY.GRADE)[0]; }
+function fyEventFor(f) { const e = fyActiveEvent(); return e && f && e.grades.includes(f.grade) ? e : null; }
+function fyUid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function fyToday() { return new Date().toISOString().slice(0, 10); }
+function fyType(id) { return FY.TYPES.find(t => t.id === id) || { id, icon: '•', label: id || 'Activity', rt: 'Other' }; }
+function fyKind(m) { return FY.MOVE_KINDS[m.kind] || FY.MOVE_KINDS.apply; }
+function fyStatusLabel(m) { const k = fyKind(m); const s = k.statuses.find(x => x[0] === m.status) || k.statuses[0]; return s[1]; }
+function fyMoveLate(m) { return m.due && m.due < fyToday() && !fyKind(m).closed.includes(m.status); }
+function fyBlank() { return { events: {}, deck: [], level: {}, moves: [], note: {}, plan9: {} }; }
+function fyOf(data) {
+  const fy = (data && data.fy) || {};
+  return { ...fyBlank(), ...fy, events: fy.events || {}, deck: fy.deck || [], moves: fy.moves || [], level: fy.level || {}, note: fy.note || {}, plan9: fy.plan9 || {} };
+}
+function fyGet() {
+  if (!S.fellow) return fyBlank();
+  const d = S.data[S.fellow.id] = S.data[S.fellow.id] || {};
+  d.fy = fyOf(d); return d.fy;
+}
+function fyCheckinDone(ev, e) {
+  if (!e || !e.mood) return false;
+  if (ev.kind === 'explore') return !!(e.plan && (e.paths || []).length);
+  return !!((ev.kind === 'symposium' ? e.growth : e.quote) || '').trim();
+}
+function fyNoteOpen() { return fyToday() >= FY.NOTE_OPENS; }
+function fyNoteHas(n) { return ['goal','explore','text'].some(k => (n[k] || '').trim()); }
+function fyDeckStats(deck) {
+  const acts = deck.filter(c => c.type !== 'award');
+  const multi = acts.filter(c => (c.grades || []).length >= 2).length;
+  const lead = acts.filter(c => FY.LEAD_ROLES.includes(c.role)).length;
+  const awards = deck.filter(c => c.type === 'award').length;
+  const hours = acts.reduce((a, c) => a + (parseFloat(c.hours) || 0), 0);
+  let level = 1;
+  if (acts.length >= 5 && (multi >= 1 || lead >= 1)) level = 2;
+  if (acts.length >= 8 && multi >= 2) level = 3;
+  if (level === 3 && awards >= 5) level = 4;
+  return { count: deck.length, acts: acts.length, multi, lead, awards, hours, level };
+}
+function fyStops(fy, f) {
+  const ev = fyEventFor(f || S.fellow);
+  return {
+    checkin: ev ? fyCheckinDone(ev, fy.events[ev.id]) : FY.EVENTS.some(e => fyCheckinDone(e, fy.events[e.id])),
+    deck: fy.deck.length >= FY.DECK_GOAL,
+    move: fy.moves.some(m => (m.name || '').trim()),
+    note: !!fy.note.sealed,
+  };
+}
+function fyChanged(rerender) { scheduleAutoSave(); if (rerender) renderFY(); }
+function fySecHead(n, key, title, meta) {
+  if (FYUI.play) return '';
+  return `<div class="fy-sec-head"><div class="fy-sec-badge">${fyIcon(key, 20)}</div>
+    <div class="fy-sec-titles"><div class="fy-sec-kicker">Stop ${n} of 4</div><h3 class="fy-sec-title">${title}</h3></div>
+    ${meta ? `<div class="fy-sec-meta">${meta}</div>` : ''}</div>`;
+}
+
+// ── RENDER: FELLOW ────────────────────────────────────────────────
+function renderFY() {
+  const root = document.getElementById('fy-root'); if (!root || !S.fellow) return;
+  if (FYUI.fid !== S.fellow.id) FYUI = { edit: null, confirmDel: null, editMove: null, fid: S.fellow.id, showResume: false, anim: {}, prev: null, view: 'map', q: 0 };
+  const fy = fyGet(); const ro = fyRO(); const ev = fyEventFor(S.fellow);
+  const st = fyStops(fy); const done = Object.values(st).filter(Boolean).length;
+  const first = (S.fellow.name || '').split(' ')[0];
+  const myEvents = FY.EVENTS.filter(e => e.grades.includes(S.fellow.grade));
+  const passport = myEvents.length > 1 ? `<div class="fy-passport">${myEvents.map(e => {
+    const got = fyCheckinDone(e, fy.events[e.id]); const open = ev && ev.id === e.id;
+    return `<div class="fy-pass${got ? ' got' : ''}${open ? ' open' : ''}"><b>${fyEsc(e.name)}</b><i>${got ? '✓ Checked in' : open ? 'Open now' : fyEsc(e.when)}</i></div>`; }).join('')}</div>` : '';
+  const steps = [['checkin','Check in'],['deck','My involvement'],['move','Next move'],['note','Note for May']];
+  if (!ro) {
+    FYUI.view = FYUI.view || 'map'; FYUI.play = FYUI.view !== 'map';
+    root.innerHTML = FYUI.view === 'map' ? fyMapHTML(fy, st, ev, first, passport) : fyStopScreen(FYUI.view, fy, ev, st);
+    FYUI.play = false;
+    fyCelebrate(fy, st, ro); return;
+  }
+  root.innerHTML = `
+    <div class="fy-hero">
+      <div class="fy-hero-kicker">${ev ? fyEsc(ev.name) + ' · ' + fyEsc(ev.when) : 'Future You'}</div>
+      <div class="fy-hero-title">${fyEsc(first)}'s Future You</div>
+      <div class="fy-hero-sub">Four stops. Your answers save as you go, and you can come back to add more all year.</div>
+      ${passport}
+      <div class="fy-steps" aria-label="Progress: ${done} of 4 stops complete">
+        ${steps.map(([k, l], i) => `<div class="fy-step${st[k] ? ' done' : ''}"><div class="fy-step-dot">${st[k] ? fyIcon('check', 18) : fyIcon(k, 18)}</div><div class="fy-step-txt"><span>Stop ${i + 1}</span>${l}</div></div>`).join('')}
+      </div>
+      <div class="fy-progress"><i style="width:${done / 4 * 100}%"></i></div>
+      <div class="fy-progress-lbl">${done} of 4 complete</div>
+    </div>
+    ${fyCheckinHTML(fy, ev, ro)}
+    ${fyDeckHTML(fy, ro)}
+    ${fyMovesHTML(fy, ro)}
+    ${fyNoteHTML(fy, ro)}`;
+  fyCelebrate(fy, st, ro);
+}
+
+// ── PLAY MODE (Fellows): road map home + one stop at a time ───────
+const FY_STOPS = [
+  { key: 'checkin', n: 1, title: 'Check in',        sub: 'How you feel about life after high school' },
+  { key: 'deck',    n: 2, title: 'My involvement', sub: 'Everything you do outside of class' },
+  { key: 'move',    n: 3, title: 'Your next move',  sub: 'One thing to go after this year' },
+  { key: 'note',    n: 4, title: 'A note for May',  sub: 'Sealed until May' },
+];
+function fyNextStop(st) { const s = FY_STOPS.find(x => !st[x.key]); return s ? s.key : null; }
+function fyMapHTML(fy, st, ev, first, passport) {
+  const done = Object.values(st).filter(Boolean).length; const next = fyNextStop(st);
+  const pos = [[9, 72], [36, 28], [63, 72], [90, 28]];
+  const s = fyDeckStats(fy.deck);
+  const nodes = FY_STOPS.map((x, i) => {
+    const state = st[x.key] ? 'done' : x.key === next ? 'next' : 'open';
+    return `<button class="fy-node ${state}${FYUI.anim && FYUI.anim.stamp === x.key ? ' stamp' : ''}" style="left:${pos[i][0]}%;top:${pos[i][1]}%" data-action="fy-go" data-to="${x.key}" aria-label="Stop ${x.n}: ${x.title}">
+      <span class="fy-node-dot">${st[x.key] ? fyIcon('check', 26) : fyIcon(x.key, 24)}</span>
+      <span class="fy-node-lbl"><small>Stop ${x.n}</small>${x.title}</span></button>`; }).join('');
+  const nx = FY_STOPS.find(x => x.key === next);
+  return `<div class="fy-map">
+    <div class="fy-map-top">
+      <div><div class="fy-hero-kicker">${ev ? fyEsc(ev.name) + ' · ' + fyEsc(ev.when) : 'Future You'}</div>
+      <div class="fy-map-title">Roadmap to my Future SELF</div></div>
+      <div class="fy-map-count"><b>${done}</b>/4<small>stops</small></div>
+    </div>
+    ${passport}
+    <div class="fy-road">
+      <svg class="fy-road-svg" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+        <path class="fy-road-base" d="M40 230 C 200 230, 230 70, 360 84 S 520 230, 630 216 S 820 70, 960 84"/>
+        <path class="fy-road-line" d="M40 230 C 200 230, 230 70, 360 84 S 520 230, 630 216 S 820 70, 960 84"/>
+        <path class="fy-road-done" pathLength="100" style="stroke-dasharray:${done / 4 * 100} 100" d="M40 230 C 200 230, 230 70, 360 84 S 520 230, 630 216 S 820 70, 960 84"/>
+      </svg>
+      ${nodes}
+    </div>
+    ${nx ? `<button class="fy-go" data-action="fy-go" data-to="${nx.key}"><span><small>${done ? 'Up next' : 'Start here'} · Stop ${nx.n}</small>${nx.title}</span><em>${fyEsc(nx.sub)}</em><b>Go →</b></button>`
+         : `<div class="fy-go done"><span><small>All 4 stops done</small>See you in May</span><em>You can come back any time to add cards or update your next move.</em></div>`}
+    <div class="fy-map-stats">
+      <div><b>${fy.deck.length}</b><span>activities</span></div>
+      <div><b>${fy.level.revealed ? s.level : '?'}</b><span>${fy.level.revealed ? FY.RUBRIC[s.level - 1].label : 'level'}</span></div>
+      <div><b>${fy.moves.filter(m => (m.name || '').trim()).length}</b><span>next moves</span></div>
+      <div><b>${fy.note.sealed ? fyIcon('note', 22) : '—'}</b><span>${fy.note.sealed ? 'sealed' : 'note'}</span></div>
+    </div>
+  </div>`;
+}
+function fyPlayHead(stop, total, q) {
+  return `<div class="fy-play-head">
+    <button class="fy-back" data-action="fy-map">← Map</button>
+    <div class="fy-play-title"><span class="fy-play-ico">${fyIcon(stop.key, 22)}</span><div><small>Stop ${stop.n} of 4</small><h2>${stop.title}</h2></div></div>
+    ${total > 1 ? `<div class="fy-dots">${Array.from({ length: total }, (_, i) => `<i class="${i < q ? 'done' : i === q ? 'now' : ''}"></i>`).join('')}</div>` : ''}
+  </div>`;
+}
+function fyPlayNav(q, total, finishLabel, canNext) {
+  return `<div class="fy-play-nav">
+    ${q > 0 ? `<button class="fy-btn ghost" data-action="fy-prev">← Back</button>` : '<span></span>'}
+    ${q < total - 1 ? `<button class="fy-btn big" data-action="fy-next" ${canNext === false ? 'disabled' : ''}>Next →</button>`
+                    : `<button class="fy-btn big" data-action="fy-finish">${finishLabel} ✓</button>`}
+  </div>`;
+}
+function fyNextStopNav(to, back) {
+  const s = FY_STOPS.find(x => x.key === to);
+  return `<div class="fy-play-nav">${back ? `<button class="fy-btn ghost" data-action="fy-prev">← Back</button>` : '<span></span>'}
+    <button class="fy-btn big fy-next-stop" data-action="fy-gonext" data-to="${to}"><small>Next: Stop ${s.n}</small>${s.title} →</button></div>`;
+}
+function fyQ(text, pick, body) { return `<div class="fy-bigq">${text}${pick ? ` <span class="fy-pick">${pick}</span>` : ''}</div>${body}`; }
+function fyStopScreen(key, fy, ev, st) {
+  const stop = FY_STOPS.find(x => x.key === key); let q = FYUI.q || 0; let total = 1; let body = ''; let nav = '';
+  if (key === 'checkin') {
+    if (ev && ev.kind === 'explore') {
+      const e = fy.events[ev.id] || {};
+      const qs = [
+        () => fyQ('How do you feel about life after high school right now?', '', fyMoodHTML(e, '')),
+        () => fyQ('Which path are you most curious about?', 'Pick up to 2', `<div class="fy-tiles">${FY.PATHS.map(p => `<button class="fy-tile${(e.paths||[]).includes(p.id)?' on':''}" data-action="fy-path" data-path="${p.id}">${p.label}</button>`).join('')}</div>`),
+        () => fyQ('Right now, my plan for after high school is…', 'Pick one', `<div class="fy-tiles three">${FY.PLAN.map(p => `<button class="fy-tile${e.plan===p.id?' on':''}" data-action="fy-plan" data-plan="${p.id}">${p.label}</button>`).join('')}</div>`),
+      ];
+      total = qs.length; q = Math.min(q, total - 1);
+      const can = [!!e.mood, (e.paths || []).length > 0, !!e.plan][q];
+      body = `<div class="fy-play-card">${qs[q]()}</div>`; nav = fyPlayNav(q, total, 'Finish check-in', can);
+    } else { body = fyCheckinHTML(fy, ev, false); nav = fyPlayNav(0, 1, 'Back to map'); }
+  }
+  if (key === 'deck') {
+    total = 2; q = Math.min(q, 1); const self = fy.level.self;
+    if (q === 0) {
+      body = `<div class="fy-play-card">${fyQ('Before you start: where do you think your involvement is right now?', '', `<div class="fy-senior"><b>This is a senior-year scale.</b> These levels describe seniors who are applying to college. You are not expected to be there yet. Most Fellows start at a 1 or 2, and that is a normal place to begin.</div><div class="fy-hint">Make your best guess. You'll see your rating after you add your activities.</div><div class="fy-guess-cap">Senior-year levels</div>
+        <div class="fy-guess">${FY.RUBRIC.map(r => `<button class="fy-guess-tile${self === r.n ? ' on' : ''}" data-action="fy-level" data-n="${r.n}"><b>${r.n}</b><strong>${r.label}</strong><span>${r.need}</span></button>`).join('')}</div>`)}</div>`;
+      nav = fyPlayNav(0, 2, '', !!self).replace('Next →', 'Add my activities →');
+    } else { body = fyDeckHTML(fy, false); nav = fyNextStopNav('move', true); }
+  }
+  if (key === 'move') { body = fyMovesHTML(fy, false); nav = fyNextStopNav('note', false); }
+  if (key === 'note') {
+    const n = fy.note;
+    if (n.sealed) { body = fyNoteHTML(fy, false); nav = fyPlayNav(0, 1, 'Back to map'); }
+    else {
+      const Q = [['goal', "By May, what's one thing you will have gotten involved in?"], ['explore', 'How will you start exploring your future interests this year?']];
+      total = 3; q = Math.min(q, 2);
+      if (q < 2) { const [k, text] = Q[q]; body = `<div class="fy-play-card">${fyQ(text, '', `<textarea class="fy-ta big" data-fy="note.${k}" rows="4">${fyEsc(n[k])}</textarea>`)}</div>`; nav = fyPlayNav(q, total, ''); }
+      else {
+        body = `<div class="fy-play-card">${fyQ('Ready to seal it?', '', `<div class="fy-hint" style="margin-top:0;">Once you seal it, you can't read it again until May.</div>
+          <div class="fy-preview">${Q.map(([k, text]) => `<div><small>${text}</small><p>${n[k] ? fyEsc(n[k]) : '<em>Skipped</em>'}</p></div>`).join('')}</div>`)}</div>`;
+        nav = `<div class="fy-play-nav"><button class="fy-btn ghost" data-action="fy-prev">← Back</button><button class="fy-btn big" data-action="fy-seal" ${fyNoteHas(n) ? '' : 'disabled'}>Seal it 🔒</button></div>`;
+      }
+    }
+  }
+  return `<div class="fy-play">${fyPlayHead(stop, total, q)}${body}${nav}</div>`;
+}
+
+const FY_STOP_NAMES = { checkin: 'Stop 1: Check in', deck: 'Stop 2: My involvement', move: 'Stop 3: Next move', note: 'Stop 4: Note for May' };
+function fyReduced() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function fyCelebrate(fy, st, ro) {
+  const lvl = fyDeckStats(fy.deck).level; const prev = FYUI.prev;
+  FYUI.prev = { st: { ...st }, lvl, cards: fy.deck.length };
+  const A = FYUI.anim || {}; FYUI.anim = {};
+  if (ro || !prev) return;
+  let i = 0;
+  if (fy.level.revealed && lvl > prev.lvl) { fyToast('Level up! Your rating is now ' + lvl, i++, true); fyConfetti(); }
+  if (fy.deck.length > prev.cards && fy.deck.length === FY.DECK_GOAL) fyToast(FY.DECK_GOAL + ' activities added', i++);
+  Object.keys(st).forEach(k => { if (st[k] && !prev.st[k]) fyToast(FY_STOP_NAMES[k] + ' ✓', i++); });
+  if (Object.values(st).every(Boolean) && !Object.values(prev.st).every(Boolean)) { fyToast('All 4 stops done. See you in May.', i++, true); fyConfetti(); }
+}
+function fyToast(text, i, big) {
+  const el = document.createElement('div'); el.className = 'fy-toast' + (big ? ' big' : ''); el.textContent = text;
+  const n = document.querySelectorAll('.fy-toast').length; el.style.top = (80 + n * 52) + 'px'; el.style.animationDelay = ((i || 0) * 0.2) + 's';
+  document.body.appendChild(el); setTimeout(() => el.remove(), 2800 + (i || 0) * 200);
+}
+function fyConfetti() {
+  if (fyReduced()) return;
+  const colors = ['#f0c917', '#1a1a1a', '#ed125f', '#1fa3a3', '#f28c28'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('i'); p.className = 'fy-conf';
+    p.style.left = Math.random() * 100 + 'vw'; p.style.background = colors[i % colors.length]; p.style.width = (6 + Math.random() * 6) + 'px';
+    p.style.setProperty('--x', (Math.random() * 200 - 100) + 'px'); p.style.setProperty('--r', (Math.random() * 720) + 'deg'); p.style.animationDelay = Math.random() * 0.3 + 's';
+    document.body.appendChild(p); setTimeout(() => p.remove(), 2200);
+  }
+}
+
+function fyMoodHTML(e, dis) {
+  const mood = e.mood ? FY.MOODS[e.mood] : null;
+  const quad = k => `<button class="fy-mq ${k}${e.mood===k?' on':''}" data-action="fy-mood" data-mood="${k}" ${dis}><b>${FY.MOODS[k].label}</b><span>${FY.MOODS[k].desc}</span></button>`;
+  return `<div class="fy-mood2">
+    <div class="fy-my">More<br>energy</div>${quad('red')}${quad('yellow')}
+    <div class="fy-my">Less<br>energy</div>${quad('blue')}${quad('green')}
+    <div></div><div class="fy-mx">Unpleasant</div><div class="fy-mx">Pleasant</div></div>
+    ${mood ? `<div class="fy-q sm">Which word fits best?</div>
+    <div class="fy-chips">${mood.words.map(w => `<button class="fy-chip sm${e.word===w?' on':''}" data-action="fy-word" data-word="${w}" ${dis}>${w}</button>`).join('')}</div>` : ''}`;
+}
+function fyFirstCheckin(fy, exceptId) {
+  return FY.EVENTS.filter(x => x.id !== exceptId && fy.events[x.id] && fy.events[x.id].mood).map(x => ({ ev: x, e: fy.events[x.id] }))[0];
+}
+function fyCheckinHTML(fy, ev, ro) {
+  const G = fyG(); const dis = ro ? 'disabled' : '';
+  const pastList = FY.EVENTS.filter(x => (!ev || x.id !== ev.id) && fy.events[x.id] && fy.events[x.id].mood);
+  const past = pastList.length ? `<div class="field-label" style="margin-top:20px;">Past check-ins</div>` + pastList.map(x => {
+    const p = fy.events[x.id]; const main = x.kind === 'symposium' ? p.growth : p.quote;
+    return `<div class="fy-past"><b>${fyEsc(x.name)}</b> · <span class="fy-dot ${p.mood}"></span>${fyEsc(p.word || FY.MOODS[p.mood].label)}${x.kind==='tour' && p.campus ? ' · ' + fyEsc(p.campus) : ''}${main ? `<div>&ldquo;${fyEsc(main)}&rdquo;</div>` : ''}</div>`; }).join('') : '';
+  if (!ev) return `<div class="fy-sec" id="fy-sec-checkin">${fySecHead(1, 'checkin', 'Check in')}
+    <div class="card"><div class="fy-q">No check-in is open right now.</div><div class="fy-hint">You can still add activities and work on your next move below.</div>${past}</div></div>`;
+  const e = fy.events[ev.id] || {};
+  let body = `<div class="fy-q">${ev.kind === 'explore' ? 'How do you feel about life after high school right now?' : 'How did today leave you feeling?'}</div>${fyMoodHTML(e, dis)}`;
+  if (ev.kind === 'explore') body += `
+    <div class="fy-q">Which path are you most curious about? <span class="fy-pick">Pick up to 2</span></div>
+    <div class="fy-chips">${FY.PATHS.map(p => `<button class="fy-chip${(e.paths||[]).includes(p.id)?' on':''}" data-action="fy-path" data-path="${p.id}" ${dis}>${p.label}</button>`).join('')}</div>
+    <div class="fy-q">Right now, my plan for after high school is… <span class="fy-pick">Pick one</span></div>
+    <div class="fy-chips">${FY.PLAN.map(p => `<button class="fy-chip${e.plan===p.id?' on':''}" data-action="fy-plan" data-plan="${p.id}" ${dis}>${p.label}</button>`).join('')}</div>`;
+  if (ev.kind === 'forum') body += `
+    <div class="fy-q">Whose path are you most curious about now? <span class="fy-pick">Pick up to 2</span></div>
+    <div class="fy-chips">${FY.PATHS.map(p => `<button class="fy-chip${(e.paths||[]).includes(p.id)?' on':''}" data-action="fy-path" data-path="${p.id}" ${dis}>${p.label}</button>`).join('')}</div>
+    <div class="fy-q">What's one thing an alum said that you're still thinking about?</div>
+    <textarea class="fy-ta" data-fy="ev.quote" rows="2" ${dis}>${fyEsc(e.quote)}</textarea>
+    <input type="text" class="text-input" data-fy="ev.alum" style="margin-top:6px;" placeholder="Who said it? (optional)" value="${fyEsc(e.alum)}" ${dis}>
+    <div class="fy-q">Today… <span class="fy-pick">Pick one</span></div>
+    <div class="fy-chips">${FY.SHIFT.map(s => `<button class="fy-chip${e.shift===s.id?' on':''}" data-action="fy-shift" data-shift="${s.id}" ${dis}>${s.label}</button>`).join('')}</div>
+    <div class="fy-q">${G.stealQ}</div>
+    <textarea class="fy-ta" data-fy="ev.steal" rows="2" ${dis}>${fyEsc(e.steal)}</textarea>`;
+  if (ev.kind === 'tour') body += `
+    <div class="fy-q">Which campus is this about?</div>
+    <input type="text" class="text-input" data-fy="ev.campus" placeholder="e.g. Texas Southern University" value="${fyEsc(e.campus)}" ${dis}>
+    <div class="fy-q">Could you see yourself here?</div>
+    <div class="fy-level five">${FY.FIT.map(x => `<button class="fy-lv${e.fit===x.n?' on':''}" data-action="fy-fit" data-n="${x.n}" ${dis}><b>${x.n}</b><span>${x.label}</span></button>`).join('')}</div>
+    <div class="fy-q">What's one moment from the visit you'll remember?</div>
+    <textarea class="fy-ta" data-fy="ev.quote" rows="2" ${dis}>${fyEsc(e.quote)}</textarea>
+    <div class="fy-q">What question do you still have?</div>
+    <input type="text" class="text-input" data-fy="ev.question" value="${fyEsc(e.question)}" ${dis}>
+    <div class="fy-q">What do you need to do before senior year to get somewhere like this?</div>
+    <textarea class="fy-ta" data-fy="ev.steal" rows="2" ${dis}>${fyEsc(e.steal)}</textarea>`;
+  if (ev.kind === 'symposium') {
+    const then = fyFirstCheckin(fy, ev.id);
+    body += `${then ? `<div class="fy-then"><div class="field-label" style="margin-top:0;">At ${fyEsc(then.ev.name)} you said</div>
+      <div><span class="fy-dot ${then.e.mood}"></span>You felt <b>${fyEsc(then.e.word || FY.MOODS[then.e.mood].label)}</b>${then.e.quote ? `, and you were still thinking about &ldquo;${fyEsc(then.e.quote)}&rdquo;` : ''}</div>
+      ${then.e.steal ? `<div style="margin-top:4px;">You wanted to start: <b>${fyEsc(then.e.steal)}</b></div>` : ''}</div>` : ''}
+    <div class="fy-q">What's different about you since the fall?</div>
+    <textarea class="fy-ta" data-fy="ev.growth" rows="3" ${dis}>${fyEsc(e.growth)}</textarea>
+    <div class="fy-q">Which activity are you proudest of?</div>
+    <select class="text-input" data-fy="ev.proud" ${dis}><option value="">Choose a card…</option>${fy.deck.map(c => `<option value="${c.id}"${e.proud===c.id?' selected':''}>${fyEsc(c.org || 'Untitled')}</option>`).join('')}</select>
+    <div class="fy-q">What will you keep doing next year?</div>
+    <textarea class="fy-ta" data-fy="ev.steal" rows="2" ${dis}>${fyEsc(e.steal)}</textarea>`;
+  }
+  return `<div class="fy-sec" id="fy-sec-checkin">${fySecHead(1, 'checkin', 'Check in', fyEsc(ev.name))}
+    <div class="card">${body}${past}</div></div>`;
+}
+
+function fyMeter(s, shown) {
+  return `<div class="fy-meter2"><div class="fy-meter2-top"><span>Involvement meter</span>${shown ? `<b>Level ${s.level} · ${FY.RUBRIC[s.level-1].label}</b>` : '<b class="dim">Level hidden</b>'}</div>
+    <div class="fy-bar"><i style="width:${Math.min(100, s.acts / 10 * 100)}%"></i><span class="m" style="left:50%">5</span><span class="m" style="left:80%">8</span></div>
+    <div class="fy-rating-stats light"><span><b>${s.acts}</b> activities</span><span><b>${s.multi}</b> more than one year</span><span><b>${s.lead}</b> leadership</span><span><b>${s.awards}</b> awards</span></div></div>`;
+}
+function fyRubricBox(fy, ro) {
+  const s = fyDeckStats(fy.deck); const self = fy.level.self; const R = FY.RUBRIC[s.level - 1];
+  if (!fy.level.revealed) return fyMeter(s, false) + (ro ? '<div class="fy-hint" style="margin-top:10px;">Rating not revealed yet.</div>' :
+    `<div class="fy-reveal-cta"><div><b>Ready to see your rating?</b><span>${self ? 'You guessed ' + self + '. Let’s see.' : 'Make your guess at the top first.'}</span></div>
+      <button class="fy-btn dark" data-action="fy-reveal" ${self ? '' : 'disabled'}>Reveal my rating</button></div>`);
+  const next = FY.RUBRIC[s.level];
+  const msg = !self ? '' : self === s.level ? 'Your guess matched your rating.'
+    : self > s.level ? 'You guessed higher than your rating. Check for missing activities, or treat this as your goal.'
+    : "You guessed lower than your rating. You're doing more than you thought.";
+  return fyMeter(s, true) + `<div class="fy-rating${FYUI.anim && FYUI.anim.reveal ? ' flip' : ''}">
+    <div class="fy-rating-num"><small>Your rating</small>${s.level}<em>${R.label}</em></div>
+    <div class="fy-rating-body">
+      <div class="fy-rating-src">Based on BRYC's Involvement Rubric</div>
+      ${msg ? `<div class="fy-rating-msg">${msg}${self ? ` <span>(You guessed ${self}.)</span>` : ''}</div>` : ''}
+      <div class="fy-rating-stats"><span><b>${s.acts}</b> activities</span><span><b>${s.multi}</b> more than one year</span><span><b>${s.lead}</b> leadership</span><span><b>${s.awards}</b> awards</span></div>
+      ${next ? `<div class="fy-rating-next"><b>To reach ${next.n} (${next.label}):</b> ${next.need}</div>` : ''}
+      <div class="fy-rating-next">Remember: this scale is for seniors. A 1 or 2 now is a normal starting point. You have until senior year to build.</div>
+    </div></div>
+    <details class="fy-rubric"><summary>See all four senior-year levels</summary>${FY.RUBRIC.map(r => `<div><b>${r.n} · ${r.label}</b> ${r.need}</div>`).join('')}</details>`;
+}
+function fyDeckHTML(fy, ro) {
+  const G = fyG(); const s = fyDeckStats(fy.deck); const self = fy.level.self;
+  const cards = fy.deck.map(c => FYUI.edit === c.id && !ro ? fyCardEdit(c) : fyCardView(c, ro)).join('');
+  let extra = '';
+  if (G.plan9) {
+    const p = fy.plan9; const types = FY.TYPES.filter(t => !['award','family','bryc'].includes(t.id));
+    extra += `<div class="fy-q" style="margin-top:24px;">What will you try in 9th grade? <span class="fy-pick">Pick up to 2</span></div>
+      <div class="fy-chips">${types.map(t => `<button class="fy-chip${(p.types||[]).includes(t.id)?' on':''}" data-action="fy-plan9" data-type="${t.id}" ${ro?'disabled':''}>${t.label}</button>`).join('')}</div>
+      <input type="text" class="text-input" data-fy="plan9.text" style="margin-top:8px;" placeholder="Name a team, club, or program" value="${fyEsc(p.text)}" ${ro?'disabled':''}>`;
+  }
+  if (G.resume && fy.deck.length) {
+    extra += `<div class="fy-q" style="margin-top:24px;">Turn your activities into a résumé</div>
+      <div class="fy-hint">Your cards, sorted into the BRYC résumé template. Copy and paste into your résumé doc.</div>
+      <button class="fy-btn dark" data-action="fy-resume">${FYUI.showResume ? 'Hide résumé' : 'Show my résumé'}</button>
+      ${FYUI.showResume ? fyResumeHTML(fy) : ''}`;
+  }
+  return `<div class="fy-sec" id="fy-sec-deck">${fySecHead(2, 'deck', 'My involvement', `${s.count} card${s.count===1?'':'s'}${s.count < FY.DECK_GOAL ? ' · goal ' + FY.DECK_GOAL : ''}`)}
+    <div class="card">
+      ${FYUI.play ? '' : `<div class="fy-q">Before you start: how involved are you right now?</div>
+      <div class="fy-senior"><b>This is a senior-year scale.</b> These levels describe seniors who are applying to college. You are not expected to be there yet. Most Fellows start at a 1 or 2, and that is a normal place to begin.</div><div class="fy-hint">Make your best guess. You'll see your rating after you add your activities.</div>
+      <div class="fy-level">${FY.RUBRIC.map(l => `<button class="fy-lv${self===l.n?' on':''}" data-action="fy-level" data-n="${l.n}" ${ro?'disabled':''}><b>${l.n}</b><span>${l.label}</span></button>`).join('')}</div>`}
+
+      <div class="fy-q" style="${FYUI.play ? 'margin-top:0' : 'margin-top:24px'};">Add a card for each activity you do outside of class.</div>
+      <div class="fy-hint">${G.deckHint}</div>
+      ${ro ? '' : `<div class="fy-sparks">${FY.SPARKS.map(sp => `<button class="fy-spark" data-action="fy-spark" data-type="${sp.type}"><span>${fyEsc(fyType(sp.type).label)}</span>${fyEsc(sp.q)}</button>`).join('')}</div>`}
+      <div class="fy-deck">${cards}${ro ? (fy.deck.length ? '' : '<div class="tk-empty">No cards yet.</div>') : `<button class="fy-add" data-action="fy-add"><b>+</b>Add a card</button>`}</div>
+      ${fy.deck.length ? fyRubricBox(fy, ro) : ''}
+      ${extra}
+    </div></div>`;
+}
+function fyCardView(c, ro) {
+  const t = fyType(c.type); const grades = (c.grades || []).slice().sort((a,b)=>a-b); const del = FYUI.confirmDel === c.id;
+  return `<div class="fy-card t-${fyEsc(c.type)}${FYUI.anim && FYUI.anim.deal === c.id ? ' deal' : ''}">
+    <div class="fy-card-top"><div class="fy-card-org">${fyEsc(c.org) || '<span style="color:#bbb">Untitled</span>'}</div>
+      ${ro ? '' : `<div style="white-space:nowrap;"><button class="fy-card-btn" data-action="fy-edit" data-id="${c.id}">Edit</button><button class="fy-card-btn${del?' danger':''}" data-action="fy-del" data-id="${c.id}">${del?'Tap again to delete':'✕'}</button></div>`}</div>
+    <div class="fy-card-type">${fyEsc(t.label)}${c.role ? ' · <span class="fy-card-role">' + fyEsc(c.role) + '</span>' : ''}</div>
+    ${(c.verbs || []).length ? `<div class="fy-card-verbs">${c.verbs.map(v => `<span>${fyEsc(v)}</span>`).join('')}</div>` : ''}
+    ${c.flex ? `<div class="fy-card-flex">${fyEsc(c.flex)}</div>` : (c.type === 'award' ? '' : '<div class="fy-card-flex empty">No review yet</div>')}
+    <div class="fy-card-meta">${grades.length ? `<span class="fy-tag">Grade ${grades.join(', ')}</span>` : ''}${c.type !== 'award' && c.hours ? `<span class="fy-tag">${fyEsc(c.hours)} hrs/wk</span>` : ''}</div></div>`;
+}
+function fyCardEdit(c) {
+  const award = c.type === 'award'; const G = fyG(); const verbs = c.verbs || [];
+  return `<div class="fy-card editing">
+    <div class="fy-ed-q first">What's the name of the activity?</div>
+    <input type="text" class="text-input" data-fyc="org" data-id="${c.id}" value="${fyEsc(c.org)}" placeholder="${award ? 'e.g. A Honor Roll' : c.type==='family' ? 'e.g. Caring for my younger brothers' : 'e.g. McKinley Marching Band'}">
+    <div class="fy-ed-q">What type of involvement did you have?</div>
+    <div class="fy-chips">${FY.TYPES.map(x => `<button class="fy-chip sm${c.type===x.id?' on':''}" data-action="fy-ctype" data-id="${c.id}" data-type="${x.id}">${x.label}</button>`).join('')}</div>
+    ${award ? `<div class="fy-ed-q">Who gave you this award?</div><input type="text" class="text-input" data-fyc="role" data-id="${c.id}" value="${fyEsc(c.role)}" placeholder="e.g. Scotlandville Magnet High">` :
+    `<div class="fy-ed-q">What was your role?</div><div class="fy-hint">Choose the one that most closely describes what you did.</div>
+     <div class="fy-chips">${FY.ROLES.map(r => `<button class="fy-chip sm${c.role===r?' on':''}" data-action="fy-crole" data-id="${c.id}" data-role="${r}">${r}</button>`).join('')}</div>`}
+    <div class="fy-ed-q">${award ? 'What grade(s) did you receive it?' : 'What grades did you participate in this activity?'}</div>
+    <div class="fy-chips">${G.gradeChips.map(g => `<button class="fy-chip sm${(c.grades||[]).includes(g)?' on':''}" data-action="fy-cgrade" data-id="${c.id}" data-g="${g}">${g}th</button>`).join('')}</div>
+    ${award ? '' : `<div class="fy-ed-q">What's your estimate of hours per week you spent participating?</div>
+      <div class="fy-range-row"><input type="range" class="fy-range" min="0" max="20" step="1" value="${c.hours || 0}" data-fyc="hours" data-id="${c.id}"><span class="fy-range-val" id="fy-hrs-${c.id}">${c.hours || 0} hrs</span></div>
+      <div class="fy-ed-q">What verbs describe what you did? <span class="fy-pick">Pick any</span></div>
+      <div class="fy-chips">${FY.VERBS.map(v => `<button class="fy-chip sm${verbs.includes(v)?' on':''}" data-action="fy-verb" data-id="${c.id}" data-verb="${v}">${v}</button>`).join('')}</div>
+      <div class="fy-ed-q">Write your review.</div><div class="fy-hint">Give details of what you did and how you felt about it.</div>
+      <textarea class="fy-ta" data-fyc="flex" data-id="${c.id}" rows="3">${fyEsc(c.flex)}</textarea>`}
+    <div class="fy-done-row"><span class="fy-hint" style="margin:0;">Saves as you type.</span><button class="fy-btn dark" data-action="fy-done">Done</button></div></div>`;
+}
+// Same sections as the LT BRYC Résumé Template (Awards & Honors, Activities)
+function fyResumeHTML(fy) {
+  const awards = fy.deck.filter(c => c.type === 'award');
+  const acts = fy.deck.filter(c => c.type !== 'award').slice().sort((a, b) => (b.grades || []).length - (a.grades || []).length || (parseFloat(b.hours)||0) - (parseFloat(a.hours)||0));
+  const g = c => (c.grades || []).slice().sort((a,b)=>a-b).join(', ');
+  const td = 'style="border:1px solid #ccc;padding:6px 8px;vertical-align:top;font-size:12px;"';
+  const th = 'style="border:1px solid #ccc;padding:6px 8px;background:#f3f3f3;text-align:left;font-size:11px;"';
+  const desc = c => fyEsc(c.flex || (c.verbs || []).join(', ')) + (c.hours ? ` (${fyEsc(c.hours)} hrs/wk)` : '');
+  return `<div class="fy-resume" id="fy-resume-out">
+    <div style="font-weight:900;font-size:16px;">${fyEsc(S.fellow.name)}</div>
+    <div style="font-weight:800;font-size:12px;letter-spacing:.08em;margin:14px 0 6px;">AWARDS &amp; HONORS</div>
+    <table style="border-collapse:collapse;width:100%;"><tr><th ${th}>Award/Honor</th><th ${th}>Organization</th><th ${th}>Grade(s)</th></tr>
+      ${awards.map(c => `<tr><td ${td}>${fyEsc(c.org)}</td><td ${td}>${fyEsc(c.role)}</td><td ${td}>${g(c)}</td></tr>`).join('') || `<tr><td ${td} colspan="3">Add award cards to fill this in.</td></tr>`}</table>
+    <div style="font-weight:800;font-size:12px;letter-spacing:.08em;margin:14px 0 6px;">ACTIVITIES</div>
+    <table style="border-collapse:collapse;width:100%;"><tr><th ${th}>Activity Type</th><th ${th}>Organization</th><th ${th}>Position(s) Held</th><th ${th}>Description</th><th ${th}>Grades</th></tr>
+      ${acts.map(c => `<tr><td ${td}>${fyEsc(fyType(c.type).rt)}</td><td ${td}>${fyEsc(c.org)}</td><td ${td}>${fyEsc(c.role)}</td><td ${td}>${desc(c)}</td><td ${td}>${g(c)}</td></tr>`).join('')}</table>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:8px;"><button class="fy-btn" data-action="fy-copy-resume">Copy my résumé</button><span class="fy-hint" id="fy-copy-msg" style="margin:8px 0 0;"></span></div>`;
+}
+
+function fyMovesHTML(fy, ro) {
+  const list = fy.moves.map(m => {
+    const K = fyKind(m); const late = fyMoveLate(m);
+    const editing = FYUI.editMove === m.id && !ro; const dis = ro ? 'disabled' : ''; const del = FYUI.confirmDel === m.id;
+    const status = m.status || K.statuses[0][0];
+    return `<div class="fy-move${editing ? '' : ' ticket'}">
+      <div class="fy-move-head">${m.due && !editing ? (() => { const dt = new Date(m.due + 'T12:00:00'); return `<div class="fy-stub${late ? ' late' : ''}"><small>By</small><b>${dt.toLocaleString('en-US', { month: 'short' }).toUpperCase()}</b><b>${dt.getDate()}</b></div>`; })() : `<div class="fy-move-ico">${fyIcon(m.kind || 'apply', 18)}</div>`}
+        <div style="flex:1;"><div class="fy-move-kind">${fyEsc(K.short)}</div><div class="fy-move-title">${fyEsc(m.name) || '<span style="color:#bbb">Untitled</span>'}</div>
+          ${m.due ? `<div class="fy-due${late?' late':''}">${late ? 'Past due · ' : 'First step by '}${fyEsc(m.due)}</div>` : ''}</div>
+        ${ro ? '' : `<div style="white-space:nowrap;"><button class="fy-card-btn" data-action="fy-medit" data-id="${m.id}">${editing?'Close':'Edit'}</button><button class="fy-card-btn${del?' danger':''}" data-action="fy-mdel" data-id="${m.id}">${del?'Tap again':'✕'}</button></div>`}</div>
+      ${editing ? `
+        <div class="fy-ed-q first">${K.nameQ}</div>
+        ${m.kind === 'deepen' && fy.deck.filter(c => c.type !== 'award').length ? `<div class="fy-chips" style="margin-bottom:6px;">${fy.deck.filter(c => c.type !== 'award' && c.org).map(c => `<button class="fy-chip sm${m.name===c.org?' on':''}" data-action="fy-mpick" data-id="${m.id}" data-name="${fyEsc(c.org)}">${fyEsc(c.org)}</button>`).join('')}</div>` : ''}
+        <input type="text" class="text-input" data-fym="name" data-id="${m.id}" value="${fyEsc(m.name)}" placeholder="${K.nameP}">
+        ${K.planQ ? `<div class="fy-ed-q">${K.planQ}</div><textarea class="fy-ta" data-fym="plan" data-id="${m.id}" rows="2" placeholder="${K.planP}">${fyEsc(m.plan)}</textarea>` : ''}
+        <div class="fy-ed-q">Why does this matter to you?</div>
+        <textarea class="fy-ta" data-fym="why" data-id="${m.id}" rows="2">${fyEsc(m.why)}</textarea>
+        <div class="fy-edit-grid">
+          <div><div class="fy-ed-q">What's your first step?</div><input type="text" class="text-input" data-fym="step" data-id="${m.id}" value="${fyEsc(m.step)}"></div>
+          <div><div class="fy-ed-q">By when?</div><input type="date" class="text-input" data-fym="due" data-id="${m.id}" value="${fyEsc(m.due)}"></div>
+        </div>
+        ${m.kind === 'apply' || !m.kind ? `<div class="fy-ed-q">Link (optional)</div><input type="url" class="text-input" data-fym="link" data-id="${m.id}" value="${fyEsc(m.link)}" placeholder="Paste a link from Find Your Thing">` : ''}
+        <div class="fy-done-row"><span></span><button class="fy-btn dark" data-action="fy-medit" data-id="${m.id}">Done</button></div>`
+      : `${m.plan ? `<div class="fy-card-flex">${fyEsc(m.plan)}</div>` : ''}${m.why ? `<div class="fy-card-flex" style="color:#666;">${fyEsc(m.why)}</div>` : ''}${m.step ? `<div class="fy-hint" style="margin:6px 0 0;"><b>First step:</b> ${fyEsc(m.step)}</div>` : ''}${m.link ? `<a href="${fyEsc(m.link)}" target="_blank" rel="noopener" class="fy-link">Open link →</a>` : ''}`}
+      <div class="fy-pipe">${K.statuses.map(([id, l]) => `<button class="${status===id?'on':''}${id===K.win?' win':''}" data-action="fy-mstatus" data-id="${m.id}" data-s="${id}" ${dis}>${l}</button>`).join('')}</div>
+      ${status === K.win && m.kind !== 'deepen' && !m.carded && !ro ? `<button class="fy-btn" style="margin-top:10px;" data-action="fy-mcard" data-id="${m.id}">Add it to my activities</button>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="fy-sec" id="fy-sec-move">${fySecHead(3, 'move', 'Your next move', `${fy.moves.length} move${fy.moves.length===1?'':'s'}`)}
+    <div class="card">
+      <div class="fy-q">What's your next move?</div>
+      <div class="fy-hint">It can be something to apply for, something you already do and want to go deeper in, or something you want to start on your own. Need ideas? Try <a href="https://thebryc.org/fyt" target="_blank" rel="noopener" style="color:var(--gold);font-weight:800;">Find Your Thing</a>.</div>
+      ${list || (ro ? '<div class="tk-empty">No moves yet.</div>' : '')}
+      ${ro ? '' : `<div class="fy-kinds">${Object.entries(FY.MOVE_KINDS).map(([k, K]) => `<button class="fy-kind" data-action="fy-madd" data-kind="${k}">${fyIcon(k, 22)}<span>${K.label}</span></button>`).join('')}</div>`}
+    </div></div>`;
+}
+
+function fyNoteHTML(fy, ro) {
+  const n = fy.note; const open = fyNoteOpen(); const dis = ro ? 'disabled' : '';
+  const Q = [['goal', "By May, what's one thing you will have gotten involved in?"], ['explore', 'How will you start exploring your future interests this year?']];
+  let body;
+  if (n.sealed && !ro && !open) body = `<div class="fy-envelope${FYUI.anim && FYUI.anim.sealed ? ' sealing' : ''}"><span class="fy-seal-stamp">Sealed</span>${fyIcon('note', 34)}<div>Sealed on ${fyEsc(n.sealedOn || '')}</div><span>Opens in May</span></div>`;
+  else if (n.sealed) body = `<div class="fy-envelope open"><div class="fy-env-h">${ro && !open ? 'Sealed · Team view' : 'Your note from ' + fyEsc(n.sealedOn || '')}</div>
+      ${Q.filter(([k]) => n[k]).map(([k, q]) => `<div class="fy-env-q">${q}</div><div class="fy-env-a">${fyEsc(n[k])}</div>`).join('')}${n.text ? `<div class="fy-env-a">${fyEsc(n.text)}</div>` : ''}</div>`;
+  else body = Q.map(([k, q], i) => `<div class="fy-q"${i ? '' : ' style="margin-top:0;"'}>${q}</div><textarea class="fy-ta" data-fy="note.${k}" rows="2" ${dis}>${fyEsc(n[k])}</textarea>`).join('') +
+      (ro ? '' : `<div class="fy-done-row"><span class="fy-hint" style="margin:0;">Once you seal it, you can't read it again until May.</span><button class="fy-btn dark" data-action="fy-seal">Seal it</button></div>`);
+  return `<div class="fy-sec" id="fy-sec-note">${fySecHead(4, 'note', 'A note for May', 'Opens in May')}<div class="card">${body}</div></div>`;
+}
+
+// ── EVENTS: FELLOW ────────────────────────────────────────────────
+function fyBind() {
+  const root = document.getElementById('fy-root'); if (!root) return;
+  root.addEventListener('click', async e => {
+    const t = e.target.closest('[data-action]'); if (!t || !t.dataset.action.startsWith('fy-')) return;
+    const a = t.dataset.action;
+    if (a === 'fy-resume') { FYUI.showResume = !FYUI.showResume; return renderFY(); }
+    const top = () => { const r = document.getElementById('fy-root'); if (r) { const y = r.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({ top: Math.max(0, y), behavior: fyReduced() ? 'auto' : 'smooth' }); } };
+    if (a === 'fy-go') { FYUI.view = t.dataset.to; FYUI.q = 0; FYUI.edit = null; FYUI.editMove = null; renderFY(); return top(); }
+    if (a === 'fy-gonext') { FYUI.anim.stamp = FYUI.view; FYUI.view = t.dataset.to; FYUI.q = 0; FYUI.edit = null; FYUI.editMove = null; scheduleAutoSave(); renderFY(); return top(); }
+    if (a === 'fy-map') { FYUI.view = 'map'; renderFY(); return top(); }
+    if (a === 'fy-next') { FYUI.q = (FYUI.q || 0) + 1; renderFY(); return top(); }
+    if (a === 'fy-prev') { FYUI.q = Math.max(0, (FYUI.q || 0) - 1); renderFY(); return top(); }
+    if (a === 'fy-finish') { FYUI.anim.stamp = FYUI.view; FYUI.view = 'map'; FYUI.q = 0; FYUI.edit = null; scheduleAutoSave(); renderFY(); return top(); }
+    if (a === 'fy-copy-resume') { await fyCopyResume(); return; }
+    if (fyRO()) return;
+    const fy = fyGet(); const ev = fyEventFor(S.fellow);
+    const evd = ev ? (fy.events[ev.id] = fy.events[ev.id] || {}) : {};
+    const card = id => fy.deck.find(c => c.id === id); const move = id => fy.moves.find(m => m.id === id);
+    const fgrade = fyG().defaultGrade;
+    if (a !== 'fy-del' && a !== 'fy-mdel') FYUI.confirmDel = null;
+    const toggle2 = (arr, v) => { const i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else { if (arr.length >= 2) arr.shift(); arr.push(v); } };
+    switch (a) {
+      case 'fy-mood': evd.mood = t.dataset.mood; evd.word = ''; evd.ts = evd.ts || new Date().toISOString(); return fyChanged(true);
+      case 'fy-word': evd.word = evd.word === t.dataset.word ? '' : t.dataset.word; return fyChanged(true);
+      case 'fy-path': toggle2(evd.paths = evd.paths || [], t.dataset.path); return fyChanged(true);
+      case 'fy-plan': evd.plan = evd.plan === t.dataset.plan ? '' : t.dataset.plan; return fyChanged(true);
+      case 'fy-shift': evd.shift = evd.shift === t.dataset.shift ? '' : t.dataset.shift; return fyChanged(true);
+      case 'fy-fit': evd.fit = parseInt(t.dataset.n); return fyChanged(true);
+      case 'fy-plan9': toggle2(fy.plan9.types = fy.plan9.types || [], t.dataset.type); return fyChanged(true);
+      case 'fy-add': case 'fy-spark': {
+        const c = { id: fyUid(), type: t.dataset.type || 'club', org: '', role: '', grades: [fgrade], hours: 0, verbs: [], flex: '', added: fyToday(), source: ev ? ev.id : '' };
+        fy.deck.push(c); FYUI.edit = c.id; fyChanged(true);
+        setTimeout(() => document.querySelector(`[data-fyc="org"][data-id="${c.id}"]`)?.focus(), 30); return; }
+      case 'fy-edit': FYUI.edit = t.dataset.id; return renderFY();
+      case 'fy-done': FYUI.anim.deal = FYUI.edit; FYUI.edit = null; return fyChanged(true);
+      case 'fy-del': if (FYUI.confirmDel === t.dataset.id) { fy.deck = fy.deck.filter(c => c.id !== t.dataset.id); FYUI.confirmDel = null; S.data[S.fellow.id].fy = fy; return fyChanged(true); }
+        FYUI.confirmDel = t.dataset.id; return renderFY();
+      case 'fy-ctype': { const c = card(t.dataset.id); if (c) c.type = t.dataset.type; return fyChanged(true); }
+      case 'fy-crole': { const c = card(t.dataset.id); if (c) c.role = c.role === t.dataset.role ? '' : t.dataset.role; return fyChanged(true); }
+      case 'fy-cgrade': { const c = card(t.dataset.id); if (!c) return; const g = parseInt(t.dataset.g); c.grades = c.grades || [];
+        c.grades = c.grades.includes(g) ? c.grades.filter(x => x !== g) : [...c.grades, g]; return fyChanged(true); }
+      case 'fy-verb': { const c = card(t.dataset.id); if (!c) return; c.verbs = c.verbs || []; const v = t.dataset.verb;
+        c.verbs = c.verbs.includes(v) ? c.verbs.filter(x => x !== v) : [...c.verbs, v]; t.classList.toggle('on'); return fyChanged(false); }
+      case 'fy-reveal': if (!fy.level.self) return; fy.level.revealed = true; fy.level.revealedAt = new Date().toISOString(); fy.level.ratingAtReveal = fyDeckStats(fy.deck).level;
+        FYUI.anim.reveal = true; if (fy.level.self === fy.level.ratingAtReveal) setTimeout(fyConfetti, 300); return fyChanged(true);
+      case 'fy-level': fy.level = { revealed: fy.level.revealed, self: parseInt(t.dataset.n), ts: new Date().toISOString(), deckAtGuess: fyDeckStats(fy.deck).level, cardsAtGuess: fy.deck.length }; return fyChanged(true);
+      case 'fy-madd': { const kind = t.dataset.kind || 'apply';
+        const m = { id: fyUid(), kind, name: '', plan: '', link: '', why: '', step: '', due: '', status: FY.MOVE_KINDS[kind].statuses[0][0], added: fyToday(), source: ev ? ev.id : '' };
+        fy.moves.push(m); FYUI.editMove = m.id; fyChanged(true);
+        setTimeout(() => document.querySelector(`[data-fym="name"][data-id="${m.id}"]`)?.focus(), 30); return; }
+      case 'fy-mpick': { const m = move(t.dataset.id); if (m) m.name = t.dataset.name; return fyChanged(true); }
+      case 'fy-medit': FYUI.editMove = FYUI.editMove === t.dataset.id ? null : t.dataset.id; return renderFY();
+      case 'fy-mdel': if (FYUI.confirmDel === t.dataset.id) { fy.moves = fy.moves.filter(m => m.id !== t.dataset.id); FYUI.confirmDel = null; S.data[S.fellow.id].fy = fy; return fyChanged(true); }
+        FYUI.confirmDel = t.dataset.id; return renderFY();
+      case 'fy-mstatus': { const m = move(t.dataset.id); if (!m) return; m.status = t.dataset.s; m.updated = fyToday();
+        m.history = [...(m.history || []), { s: m.status, d: m.updated }]; return fyChanged(true); }
+      case 'fy-mcard': { const m = move(t.dataset.id); if (!m) return; m.carded = true;
+        const c = { id: fyUid(), type: m.kind === 'start' ? 'job' : 'program', org: m.name, role: m.kind === 'start' ? 'Founder' : 'Member', grades: [fgrade], hours: 0, verbs: [], flex: '', added: fyToday(), source: 'move' };
+        fy.deck.push(c); FYUI.edit = c.id; fyChanged(true); document.getElementById('fy-sec-deck')?.scrollIntoView({ behavior: 'smooth' }); return; }
+      case 'fy-seal': if (!fyNoteHas(fy.note)) return; fy.note.sealed = true; fy.note.sealedOn = fyToday(); FYUI.anim.sealed = true; return fyChanged(true);
+    }
+  });
+  const onField = e => {
+    if (fyRO()) return; const el = e.target; const fy = fyGet();
+    if (el.dataset.fy) {
+      const [scope, key] = el.dataset.fy.split('.');
+      if (scope === 'ev') { const ev = fyEventFor(S.fellow); if (ev) (fy.events[ev.id] = fy.events[ev.id] || {})[key] = el.value; }
+      if (scope === 'note') fy.note[key] = el.value;
+      if (scope === 'plan9') fy.plan9[key] = el.value;
+    } else if (el.dataset.fyc) {
+      const c = fy.deck.find(x => x.id === el.dataset.id); if (!c) return;
+      c[el.dataset.fyc] = el.dataset.fyc === 'hours' ? parseInt(el.value) : el.value;
+      if (el.dataset.fyc === 'hours') { const v = document.getElementById('fy-hrs-' + c.id); if (v) v.textContent = el.value + ' hrs'; }
+    } else if (el.dataset.fym) { const m = fy.moves.find(x => x.id === el.dataset.id); if (m) m[el.dataset.fym] = el.value; }
+    else return;
+    scheduleAutoSave();
+  };
+  root.addEventListener('input', onField); root.addEventListener('change', onField);
+}
+async function fyCopyResume() {
+  const el = document.getElementById('fy-resume-out'); const msg = document.getElementById('fy-copy-msg'); if (!el) return;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([el.innerHTML], { type: 'text/html' }), 'text/plain': new Blob([el.innerText], { type: 'text/plain' }) })]);
+    if (msg) msg.textContent = 'Copied. Paste it into your résumé doc.';
+  } catch (err) {
+    const r = document.createRange(); r.selectNodeContents(el); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    if (msg) msg.textContent = 'Selected. Press Ctrl+C (or ⌘+C) to copy.';
+  }
+}
+
+// ══ TEAM INSIGHTS (shared) ════════════════════════════════════════
+let INS_EVENT = null;
+const MOOD_HEX = { yellow: '#f2c94c', red: '#e57373', green: '#5fbf7a', blue: '#5b9be0' };
+function pmFiltered() {
+  const q = (document.getElementById('pm-search')?.value || '').toLowerCase();
+  const gf = document.getElementById('pm-grade-sel')?.value || '';
+  const pmf = document.getElementById('pm-pm-filter')?.value || '';
+  return FELLOWS.filter(f => (!q || f.name.toLowerCase().includes(q)) && (!gf || f.grade === gf) && (!pmf || (f.pm || '').toLowerCase() === pmf.toLowerCase()));
+}
+function fyListBadge(f) {
+  const fy = fyOf(S.data[f.id]);
+  const n = FY.EVENTS.filter(e => fyCheckinDone(e, fy.events[e.id])).length;
+  if (!n && !fy.deck.length) return '<span class="fy-badge">Future You: not started</span>';
+  return `<span class="fy-badge ok">${n ? '✓ checked in' + (n > 1 ? ' ×' + n : '') + ' · ' : ''}${fy.deck.length} cards</span>`;
+}
+function insRows(fellows, ev) {
+  return fellows.map(f => { const fy = fyOf(S.data[f.id]); return { f, fy, ev: (ev && fy.events[ev.id]) || {}, st: fyDeckStats(fy.deck), stops: fyStops(fy, f) }; });
+}
+function insBars(items, total) {
+  const max = Math.max(1, ...items.map(i => i.n));
+  return items.map(i => `<div class="ins-bar" data-tip="${fyEsc(i.label)}: ${i.n}${total ? ' of ' + total + ' (' + Math.round(i.n / total * 100) + '%)' : ''}">
+    <div>${i.swatch ? `<span class="ins-swatch" style="background:${i.swatch}"></span>` : ''}${fyEsc(i.label)}</div>
+    <div class="ins-bar-track"><div class="ins-bar-fill" style="width:${i.n / max * 100}%"></div></div><div class="ins-bar-n">${i.n}</div></div>`).join('') || '<div class="tk-empty">No data yet.</div>';
+}
+function insCount(arr) { const m = {}; arr.forEach(v => { if (v) m[v] = (m[v] || 0) + 1; }); return m; }
+
+function renderInsights() {
+  const wrap = document.getElementById('pm-insights'); if (!wrap) return;
+  const ev = FY.EVENTS.find(e => e.id === INS_EVENT) || fyActiveEvent() || FY.EVENTS[0]; INS_EVENT = ev.id;
+  const rows = insRows(pmFiltered(), ev); const eligible = rows.filter(r => ev.grades.includes(r.f.grade)); const N = eligible.length;
+  const checked = eligible.filter(r => r.ev.mood);
+  const withDeck = rows.filter(r => r.fy.deck.length);
+  const avgCards = withDeck.length ? (withDeck.reduce((a, r) => a + r.fy.deck.length, 0) / withDeck.length).toFixed(1) : '0';
+  const allMoves = rows.flatMap(r => r.fy.moves.filter(m => (m.name || '').trim()).map(m => ({ ...m, f: r.f })));
+  const moving = allMoves.filter(m => (m.status || '') !== fyKind(m).statuses[0][0] && m.status !== 'notnow');
+  const wins = allMoves.filter(m => m.status === fyKind(m).win);
+  const late = allMoves.filter(fyMoveLate);
+  const kindC = insCount(allMoves.map(m => m.kind || 'apply'));
+  const moodC = insCount(checked.map(r => r.ev.mood)); const wordC = insCount(checked.map(r => r.ev.word));
+  const typeC = insCount(rows.flatMap(r => r.fy.deck.map(c => c.type)));
+  const calib = { under: 0, match: 0, over: 0 };
+  withDeck.forEach(r => { const s = r.fy.level.self; if (!s) return; const d = r.st.level; calib[s === d ? 'match' : s > d ? 'over' : 'under']++; });
+  const eighth = rows.filter(r => r.f.grade === '8th');
+  const plan9C = insCount(eighth.flatMap(r => r.fy.plan9.types || []));
+  const quoteKey = ev.kind === 'symposium' ? 'growth' : 'quote';
+  const quotes = checked.filter(r => (r.ev[quoteKey] || '').trim() || (r.ev.steal || '').trim());
+  const notStarted = eligible.filter(r => !r.ev.mood);
+  const grades = [...new Set(rows.map(r => r.f.grade))].sort((a, b) => parseInt(a) - parseInt(b));
+
+  let eventCard = '';
+  if (ev.kind === 'explore') {
+    const pathC = insCount(checked.flatMap(r => r.ev.paths || [])); const planC = insCount(checked.map(r => r.ev.plan));
+    eventCard = `<div class="ins-card"><h4>Paths Fellows are curious about</h4><p class="ins-sub">Up to 2 per Fellow</p>
+      ${insBars(FY.PATHS.map(p => ({ label: p.label, n: pathC[p.id] || 0 })).sort((a,b)=>b.n-a.n), checked.length)}
+      <p class="ins-sub" style="margin:10px 0 6px;">My plan for after high school is…</p>${insBars(FY.PLAN.map(p => ({ label: p.label, n: planC[p.id] || 0 })), checked.length)}</div>`;
+  } else if (ev.kind === 'forum') {
+    const pathC = insCount(checked.flatMap(r => r.ev.paths || [])); const shiftC = insCount(checked.map(r => r.ev.shift));
+    eventCard = `<div class="ins-card"><h4>Paths Fellows are curious about</h4><p class="ins-sub">Up to 2 per Fellow</p>
+      ${insBars(FY.PATHS.map(p => ({ label: p.label, n: pathC[p.id] || 0 })).sort((a,b)=>b.n-a.n), checked.length)}
+      <p class="ins-sub" style="margin:10px 0 6px;">Today…</p>${insBars(FY.SHIFT.map(s => ({ label: s.label, n: shiftC[s.id] || 0 })), checked.length)}</div>`;
+  } else if (ev.kind === 'tour') {
+    const byCampus = {}; checked.forEach(r => { const c = (r.ev.campus || 'Not named').trim(); (byCampus[c] = byCampus[c] || []).push(r.ev.fit || 0); });
+    eventCard = `<div class="ins-card"><h4>Could they see themselves there?</h4><p class="ins-sub">Average fit by campus, 1 (not for me) to 5 (I could live here)</p>
+      <table class="ins-table"><tr><th>Campus</th><th>Fellows</th><th>Avg fit</th></tr>${Object.entries(byCampus).map(([c, a]) => { const v = a.filter(Boolean); return `<tr><td>${fyEsc(c)}</td><td>${a.length}</td><td><b>${v.length ? (v.reduce((x,y)=>x+y,0)/v.length).toFixed(1) : '—'}</b></td></tr>`; }).join('') || '<tr><td colspan="3">No data yet.</td></tr>'}</table>
+      <p class="ins-sub" style="margin:12px 0 6px;">Questions Fellows still have</p>
+      <div class="ins-quotes" style="max-height:200px;">${checked.filter(r => r.ev.question).map(r => `<div class="ins-quote">${fyEsc(r.ev.question)}<cite>${fyEsc(r.f.name)} · ${fyEsc(r.ev.campus || '')}</cite></div>`).join('') || '<div class="tk-empty">None yet.</div>'}</div></div>`;
+  } else {
+    const shifts = eligible.map(r => { const first = fyFirstCheckin(r.fy, ev.id); return first && r.ev.mood ? [first.e.mood, r.ev.mood] : null; }).filter(Boolean);
+    const pl = m => m === 'yellow' || m === 'green';
+    eventCard = `<div class="ins-card"><h4>Then vs. now</h4><p class="ins-sub">First check-in mood vs. ${fyEsc(ev.name)} mood (${shifts.length} Fellows with both)</p>
+      ${insBars([{ label: 'Moved to pleasant', n: shifts.filter(([a,b]) => !pl(a) && pl(b)).length }, { label: 'Stayed pleasant', n: shifts.filter(([a,b]) => pl(a) && pl(b)).length },
+        { label: 'Stayed unpleasant', n: shifts.filter(([a,b]) => !pl(a) && !pl(b)).length }, { label: 'Moved to unpleasant', n: shifts.filter(([a,b]) => pl(a) && !pl(b)).length }], shifts.length)}</div>`;
+  }
+  const across = FY.EVENTS.length > 1 ? `<div class="ins-card" style="margin-top:12px;"><h4>Across the year</h4><p class="ins-sub">Check-ins and mood mix at every event</p>
+    <table class="ins-table"><tr><th>Event</th><th>Checked in</th>${['yellow','green','red','blue'].map(k => `<th><span class="ins-swatch" style="background:${MOOD_HEX[k]}"></span>${FY.MOODS[k].label}</th>`).join('')}</tr>
+    ${FY.EVENTS.map(e => { const el = rows.filter(r => e.grades.includes(r.f.grade)); const c = el.filter(r => r.fy.events[e.id] && r.fy.events[e.id].mood); const mc = insCount(c.map(r => r.fy.events[e.id].mood));
+      return `<tr><td>${fyEsc(e.name)}</td><td>${c.length}/${el.length}</td>${['yellow','green','red','blue'].map(k => `<td>${c.length ? Math.round((mc[k]||0)/c.length*100) + '%' : '—'}</td>`).join('')}</tr>`; }).join('')}</table></div>` : '';
+
+  wrap.innerHTML = `
+    <div class="ins-head"><h3>Future You Insights</h3>
+      ${FY.EVENTS.length > 1 ? `<select class="pm-grade-sel" id="ins-event">${FY.EVENTS.map(e => `<option value="${e.id}"${e.id===ev.id?' selected':''}>${fyEsc(e.name)}</option>`).join('')}</select>` : ''}</div>
+    <div class="ins-dl" style="margin-bottom:10px;">
+      <button class="fy-btn ghost" data-action="ins-dl" data-k="summary">⬇ Fellow summary CSV</button>
+      <button class="fy-btn ghost" data-action="ins-dl" data-k="reflections">⬇ Check-ins CSV</button>
+      <button class="fy-btn ghost" data-action="ins-dl" data-k="deck">⬇ Activities CSV</button>
+      <button class="fy-btn ghost" data-action="ins-dl" data-k="moves">⬇ Next moves CSV</button></div>
+    <p class="fy-hint">Uses the search, grade, and PM filters above. Click a Fellow in any table to open their page.</p>
+    <div class="ins-tiles">
+      <div class="ins-tile"><div class="ins-tile-num">${checked.length}<span style="font-size:14px;color:#aaa;">/${N}</span></div><div class="ins-tile-lbl">Checked in</div><div class="ins-tile-sub">${fyEsc(ev.name)}</div></div>
+      <div class="ins-tile"><div class="ins-tile-num">${avgCards}</div><div class="ins-tile-lbl">Avg activities</div><div class="ins-tile-sub">${withDeck.length} added activities</div></div>
+      <div class="ins-tile"><div class="ins-tile-num">${rows.filter(r => r.stops.move).length}</div><div class="ins-tile-lbl">Have a next move</div><div class="ins-tile-sub">${allMoves.length} total</div></div>
+      <div class="ins-tile"><div class="ins-tile-num">${moving.length}</div><div class="ins-tile-lbl">Moves in motion</div><div class="ins-tile-sub">${wins.length} done or in</div></div>
+      <div class="ins-tile"><div class="ins-tile-num" style="color:${late.length ? 'var(--pink)' : 'inherit'}">${late.length}</div><div class="ins-tile-lbl">Past due</div></div>
+      <div class="ins-tile"><div class="ins-tile-num">${rows.filter(r => r.fy.note.sealed).length}</div><div class="ins-tile-lbl">Notes sealed</div></div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card"><h4>How Fellows felt · ${fyEsc(ev.name)}</h4><p class="ins-sub">Mood Meter color</p>
+        ${insBars(['yellow','green','red','blue'].map(k => ({ label: FY.MOODS[k].label + ' · ' + FY.MOODS[k].desc.split(' · ')[0] + '…', n: moodC[k] || 0, swatch: MOOD_HEX[k] })), checked.length)}
+        <p class="ins-sub" style="margin:10px 0 6px;">Top words</p>${insBars(Object.entries(wordC).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([w,n]) => ({ label: w, n })), checked.length)}</div>
+      ${eventCard}
+      <div class="ins-card"><h4>Involvement rating</h4><p class="ins-sub">BRYC Involvement Rubric, from each Fellow's activities</p>
+        ${grades.map(g => { const gr = withDeck.filter(r => r.f.grade === g); return `<p class="ins-sub" style="margin:8px 0 4px;font-weight:800;color:#555;">${g} grade · ${gr.length} Fellows with activities</p>` + insBars(FY.RUBRIC.map(R => ({ label: R.n + ' · ' + R.label, n: gr.filter(r => r.st.level === R.n).length })), gr.length); }).join('')}
+        <p class="ins-sub" style="margin:12px 0 6px;">Guess vs. rating</p>${insBars([{ label: 'Guessed lower', n: calib.under }, { label: 'Matched', n: calib.match }, { label: 'Guessed higher', n: calib.over }])}</div>
+      <div class="ins-card"><h4>Types of involvement</h4><p class="ins-sub">Activities by type</p>${insBars(FY.TYPES.map(t => ({ label: t.label, n: typeC[t.id] || 0 })).sort((a,b)=>b.n-a.n))}
+        ${eighth.length ? `<p class="ins-sub" style="margin:12px 0 6px;">8th · What they'll try in 9th grade</p>${insBars(FY.TYPES.map(t => ({ label: t.label, n: plan9C[t.id] || 0 })).filter(x => x.n).sort((a,b)=>b.n-a.n))}` : ''}</div>
+      <div class="ins-card"><h4>Next moves</h4><p class="ins-sub">What kind, and where each one stands</p>
+        ${insBars(Object.entries(FY.MOVE_KINDS).map(([k, K]) => ({ label: K.short, n: kindC[k] || 0 })), allMoves.length)}
+        ${Object.entries(FY.MOVE_KINDS).filter(([k]) => kindC[k]).map(([k, K]) => { const ms = allMoves.filter(m => (m.kind || 'apply') === k); const sc = insCount(ms.map(m => m.status || K.statuses[0][0]));
+          return `<p class="ins-sub" style="margin:10px 0 4px;font-weight:800;color:#555;">${K.short}</p>` + insBars(K.statuses.map(([id, l]) => ({ label: l, n: sc[id] || 0 })), ms.length); }).join('')}
+        ${late.length ? `<p class="ins-sub" style="margin:12px 0 6px;color:var(--pink);font-weight:800;">Past due: follow up</p>
+          <table class="ins-table"><tr><th>Fellow</th><th>Move</th><th>Due</th></tr>${late.map(m => `<tr class="click" data-action="pm-open" data-fid="${m.f.id}"><td>${fyEsc(m.f.name)}</td><td>${fyEsc(m.name)}</td><td>${fyEsc(m.due)}</td></tr>`).join('')}</table>` : ''}</div>
+      <div class="ins-card"><h4>No check-in yet</h4><p class="ins-sub">${notStarted.length} Fellows · ${fyEsc(ev.name)}</p>
+        ${notStarted.length ? `<table class="ins-table"><tr><th>Fellow</th><th>Grade</th></tr>${notStarted.map(r => `<tr class="click" data-action="pm-open" data-fid="${r.f.id}"><td>${fyEsc(r.f.name)}</td><td>${fyEsc(r.f.grade)}</td></tr>`).join('')}</table>` : '<div class="tk-empty">Everyone has checked in.</div>'}</div>
+    </div>
+    ${across}
+    ${ev.kind === 'explore' ? '' : `<div class="ins-card" style="margin-top:12px;"><h4>In their words · ${fyEsc(ev.name)}</h4><p class="ins-sub">${ev.kind === 'symposium' ? "What's different now, and what they'll keep doing" : ev.kind === 'tour' ? 'The moment they remember, and what they need to do next' : 'What an alum said that stuck, and what they could start now'}</p>
+      <div class="ins-quotes">${quotes.map(r => `<div class="ins-quote">${r.ev[quoteKey] ? '&ldquo;' + fyEsc(r.ev[quoteKey]) + '&rdquo;' : ''}${r.ev.steal ? `<div style="margin-top:4px;color:#555;"><b>Could start:</b> ${fyEsc(r.ev.steal)}</div>` : ''}<cite>${fyEsc(r.f.name)} · ${fyEsc(r.f.grade)}${r.ev.alum ? ' · from ' + fyEsc(r.ev.alum) : ''}${r.ev.campus ? ' · ' + fyEsc(r.ev.campus) : ''}${r.ev.word ? ' · felt ' + fyEsc(r.ev.word) : ''}</cite></div>`).join('') || '<div class="tk-empty">No reflections yet.</div>'}</div></div>`}`;
+}
+
+function insCSV(kind) {
+  const rows = insRows(pmFiltered(), null);
+  const pmName = id => ((typeof CONFIG !== 'undefined' && CONFIG.PMS) ? (CONFIG.PMS.find(p => p.id === id) || {}).name : '') || id || '';
+  const base = r => [r.f.id, r.f.name, r.f.grade, pmName(r.f.pm), r.f.campus || ''];
+  const H = ['fellow_id','fellow_name','grade','pm','campus'];
+  const paths = a => (a || []).map(id => (FY.PATHS.find(p => p.id === id) || {}).label || id).join('; ');
+  const shift = id => id ? ((FY.SHIFT.find(x => x.id === id) || {}).label || id) : '';
+  let head, body = [];
+  if (kind === 'summary') {
+    head = [...H, ...FY.EVENTS.map(e => 'checked_in_' + e.id), 'cards','activities','multi_year','leadership','awards','hrs_per_wk_total','rubric_rating','guess','guess_vs_rating','rating_revealed','plan_9th_grade','moves','moves_in_motion','note_sealed','note_involved_by_may','note_explore','note_say_in_may'];
+    rows.forEach(r => { const s = r.fy.level.self, d = r.st.level; const n = r.fy.note;
+      body.push([...base(r), ...FY.EVENTS.map(e => !e.grades.includes(r.f.grade) ? 'n/a' : fyCheckinDone(e, r.fy.events[e.id]) ? 'yes' : 'no'),
+        r.fy.deck.length, r.st.acts, r.st.multi, r.st.lead, r.st.awards, r.st.hours, r.fy.deck.length ? d : '', s || '', s && r.fy.deck.length ? (s === d ? 'matched' : s > d ? 'guessed higher' : 'guessed lower') : '', r.fy.level.revealed ? 'yes' : 'no',
+        [(r.fy.plan9.types || []).map(t => fyType(t).label).join('; '), r.fy.plan9.text || ''].filter(Boolean).join(' · '),
+        r.fy.moves.length, r.fy.moves.filter(m => (m.status || '') !== fyKind(m).statuses[0][0] && m.status !== 'notnow').length,
+        n.sealed ? 'yes' : 'no', n.goal || '', n.explore || '', n.say || n.text || '']); });
+  } else if (kind === 'reflections') {
+    head = [...H, 'event','event_type','mood','mood_word','paths','plan_after_hs','today','campus','fit_1to5','what_stuck','alum','question','could_start_or_next','different_since_fall','proudest_card'];
+    rows.forEach(r => FY.EVENTS.forEach(ev => { const e = r.fy.events[ev.id]; if (!e || !e.mood) return;
+      const proud = r.fy.deck.find(c => c.id === e.proud);
+      body.push([...base(r), ev.name, ev.kind, e.mood, e.word || '', paths(e.paths), e.plan ? (FY.PLAN.find(x => x.id === e.plan) || {}).label : '', shift(e.shift), e.campus || '', e.fit || '', e.quote || '', e.alum || '', e.question || '', e.steal || '', e.growth || '', proud ? proud.org : '']); }));
+  } else if (kind === 'deck') {
+    head = [...H, 'name','type','role_or_given_by','grades','hrs_per_wk','verbs','review','multi_year','leadership','added'];
+    rows.forEach(r => r.fy.deck.forEach(c => body.push([...base(r), c.org || '', fyType(c.type).label, c.role || '', (c.grades || []).join('; '), c.type === 'award' ? '' : (c.hours || 0), (c.verbs || []).join('; '), c.flex || '', (c.grades || []).length >= 2 ? 'yes' : 'no', FY.LEAD_ROLES.includes(c.role) ? 'yes' : 'no', c.added || ''])));
+  } else {
+    head = [...H, 'kind','name','plan','status','first_step','first_step_by','past_due','why_it_matters','link','added','last_updated'];
+    rows.forEach(r => r.fy.moves.forEach(m => body.push([...base(r), fyKind(m).short, m.name || '', m.plan || '', fyStatusLabel(m), m.step || '', m.due || '', fyMoveLate(m) ? 'yes' : 'no', m.why || '', m.link || '', m.added || '', m.updated || ''])));
+  }
+  const esc = v => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const csv = [head, ...body].map(r => r.map(esc).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+  a.download = `${FY.CSV_PREFIX}_${kind === 'deck' ? 'activities' : kind}_${fyToday()}.csv`; document.body.appendChild(a); a.click(); a.remove();
+}
+function insBind() {
+  const ins = document.getElementById('pm-insights'); if (!ins) return;
+  ins.addEventListener('click', e => { const b = e.target.closest('[data-action="ins-dl"]'); if (b) insCSV(b.dataset.k); });
+  ins.addEventListener('change', e => { if (e.target.id === 'ins-event') { INS_EVENT = e.target.value; renderInsights(); } });
+}
+
+// ══ TEAM VIEW ═════════════════════════════════════════════════════
+let PMVIEW = 'list';
+function renderPM() {
+  const ae = fyActiveEvent();
+  document.getElementById('pm-active-label').innerHTML = ae ? `<b>${fyEsc(ae.name)}</b> check-in is open for ${ae.grades.join(' & ')}` : 'No check-in is open';
+  const list = document.getElementById('pm-fellow-list'); const filtered = pmFiltered();
+  list.innerHTML = filtered.length ? filtered.map(f => `<div class="fellow-item" data-action="pm-open" data-fid="${f.id}">
+      <div><div class="fellow-item-name">${fyEsc(f.name)}</div><div class="fellow-item-meta">${fyEsc(f.grade)} Grade · ${fyEsc(f.pm || '')} ${fyListBadge(f)}</div></div>
+      <span class="fellow-arrow">&#8594;</span></div>`).join('') : '<div style="padding:20px;text-align:center;color:#999;font-size:14px;">No Fellows found</div>';
+  if (PMVIEW === 'insights') renderInsights();
+  if (PMVIEW === 'events') renderEventsAdmin();
+}
+function setPMView(v) {
+  PMVIEW = v;
+  document.querySelectorAll('.pm-viewtab').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  document.getElementById('pm-fellow-list').style.display = v === 'list' ? '' : 'none';
+  document.getElementById('pm-insights').style.display = v === 'insights' ? '' : 'none';
+  document.getElementById('pm-events').style.display = v === 'events' ? '' : 'none';
+  renderPM();
+}
+function renderEventsAdmin() {
+  const ae = fyActiveEvent();
+  document.getElementById('pm-events').innerHTML = `<div class="ins-card"><h4>Which check-in is open?</h4>
+    <p class="ins-sub">Fellows see the open check-in when they log in. Old check-ins stay saved on their passport. Switch this on event day.</p>
+    ${FY.EVENTS.map(e => `<div class="ev-row${ae && ae.id === e.id ? ' on' : ''}"><div><b>${fyEsc(e.name)}</b><span>${fyEsc(e.when)} · ${e.grades.join(' & ')} · ${e.kind === 'tour' ? 'campus fit + moment' : e.kind === 'symposium' ? 'then vs. now, opens sealed notes' : 'alumni reflection'}</span></div>
+      ${ae && ae.id === e.id ? '<span class="fy-badge ok">Open</span>' : `<button class="fy-btn ghost" data-action="ev-open" data-id="${e.id}">Open this one</button>`}</div>`).join('')}
+    <div class="ev-row${!ae ? ' on' : ''}"><div><b>⏸ No check-in</b><span>Fellows can still add activities and work on their next move and note.</span></div>
+      ${!ae ? '<span class="fy-badge ok">On</span>' : '<button class="fy-btn ghost" data-action="ev-open" data-id="none">Close check-ins</button>'}</div>
+    <div class="fy-hint" id="ev-msg" style="margin-top:8px;"></div></div>`;
+}
+
+
+// ══ APP SHELL ═════════════════════════════════════════════════════
+function show(view) { S.view = view; ['landing','fellow','pm'].forEach(v => document.getElementById('screen-' + v).classList.toggle('active', v === view)); window.scrollTo(0, 0); }
+function openFellow(f) {
+  S.fellow = f;
+  document.getElementById('rh-name').textContent = f.name;
+  document.getElementById('rh-meta').textContent = f.grade + ' Grade · ' + (fyRO() ? 'Team view' : 'Future You');
+  document.getElementById('back-to-pm-btn').classList.toggle('hidden', !fyRO());
+  show('fellow'); renderFY();
+}
+async function login() {
+  const role = document.querySelector('.role-tab.active').dataset.role; const pin = document.getElementById('pin-input').value.trim();
+  const err = document.getElementById('login-error'); err.textContent = '';
+  const ls = document.getElementById('loading-screen');
+  if (role === 'pm') {
+    if (pin !== CONFIG.PASSWORDS.pm) { err.textContent = 'Incorrect password. Try again.'; return; }
+    S.role = 'pm'; ls.classList.remove('hidden');
+    const r = await apiFetch('loadAllFellows'); if (r && r.fellows) Object.entries(r.fellows).forEach(([id, d]) => { if (d) S.data[id] = d; });
+    ls.classList.add('hidden'); show('pm'); setPMView(PMVIEW); return;
+  }
+  if (!S.pick) { err.textContent = 'Find your name first.'; return; }
+  if (S.pick.hasPin) { const r = await apiFetch('checkPin', { fellowId: S.pick.id, pin }); if (!r || !r.ok) { err.textContent = "That PIN doesn't match. Ask your PM."; return; } }
+  else if (pin !== CONFIG.PASSWORDS.fellow) { err.textContent = 'Incorrect password. Try again.'; return; }
+  S.role = 'fellow'; ls.classList.remove('hidden');
+  const r = await apiFetch('loadFellow', { fellowId: S.pick.id }); if (r && r.data) S.data[S.pick.id] = r.data;
+  ls.classList.add('hidden'); openFellow(S.pick);
+}
+function bindShell() {
+  const inp = document.getElementById('fellow-search'); const dd = document.getElementById('fellow-dd');
+  inp.addEventListener('input', () => { const q = inp.value.toLowerCase().trim(); if (!q) { dd.classList.remove('open'); return; }
+    const m = FELLOWS.filter(f => f.name.toLowerCase().includes(q)).slice(0, 8);
+    dd.innerHTML = m.map(f => `<div class="fellow-option" data-action="sel-fellow" data-fid="${f.id}">${fyEsc(f.name)}<span class="grade-badge">${fyEsc(f.grade)}</span></div>`).join('');
+    dd.classList.toggle('open', m.length > 0); });
+  document.addEventListener('click', async e => {
+    if (!inp.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open');
+    const t = e.target.closest('[data-action]'); if (!t) return; const a = t.dataset.action;
+    if (a === 'sel-fellow') { const f = FELLOWS.find(x => x.id === t.dataset.fid); S.pick = f; inp.value = ''; dd.classList.remove('open');
+      document.getElementById('sel-name').textContent = f.name; document.getElementById('sel-grade').textContent = f.grade + ' Grade';
+      document.getElementById('sel-display').classList.add('visible');
+      document.getElementById('pin-input').placeholder = f.hasPin ? 'Your PIN' : 'Password'; }
+    if (a === 'clear-fellow') { S.pick = null; document.getElementById('sel-display').classList.remove('visible'); }
+    if (a === 'logout') { S.fellow = null; S.pick = null; S.role = 'fellow'; document.getElementById('pin-input').value = ''; document.getElementById('sel-display').classList.remove('visible');
+      document.querySelectorAll('.role-tab').forEach(x => x.classList.toggle('active', x.dataset.role === 'fellow')); document.getElementById('fellow-login-fields').style.display = 'block'; show('landing'); }
+    if (a === 'back-to-pm') { S.fellow = null; show('pm'); renderPM(); }
+    if (a === 'pm-open') { const f = FELLOWS.find(x => x.id === t.dataset.fid); if (f) openFellow(f); }
+    if (a === 'ev-open') { const msg = document.getElementById('ev-msg'); if (msg) msg.textContent = 'Saving…';
+      const r = await apiFetch('saveConfig', { config: { activeEvent: t.dataset.id } }); if (r && r.ok) { S.config.activeEvent = t.dataset.id; renderPM(); } else if (msg) msg.textContent = 'Could not save. Try again.'; }
+  });
+  document.querySelectorAll('.role-tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.role-tab').forEach(x => x.classList.remove('active')); t.classList.add('active');
+    const pm = t.dataset.role === 'pm'; document.getElementById('fellow-login-fields').style.display = pm ? 'none' : 'block';
+    document.getElementById('login-btn').textContent = pm ? 'Open Team Dashboard' : 'Open Future You'; }));
+  document.getElementById('login-btn').addEventListener('click', login);
+  document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  document.getElementById('pm-viewtabs').addEventListener('click', e => { const b = e.target.closest('.pm-viewtab'); if (b) setPMView(b.dataset.view); });
+  ['pm-search','pm-grade-sel','pm-pm-filter'].forEach(id => document.getElementById(id).addEventListener(id === 'pm-search' ? 'input' : 'change', renderPM));
+}
+async function init() {
+  bindShell(); fyBind(); insBind();
+  const [r, c] = await Promise.all([apiFetch('loadRoster'), apiFetch('loadConfig')]);
+  FELLOWS = ((r && r.fellows) || []).filter(f => f.name).map(f => ({ ...f, grade: (String(f.grade || '').match(/\d+/) || [''])[0] ? (String(f.grade).match(/\d+/)[0] + 'th') : String(f.grade || '').trim() }));
+  S.config = (c && c.config) || {};
+  const pms = [...new Set(FELLOWS.map(f => f.pm).filter(Boolean))].sort();
+  document.getElementById('pm-pm-filter').innerHTML = '<option value="">All PMs</option>' + pms.map(p => `<option>${fyEsc(p)}</option>`).join('');
+  document.getElementById('loading-screen').classList.add('hidden');
+}
+init();
+
+</script>
+</body>
+</html>
